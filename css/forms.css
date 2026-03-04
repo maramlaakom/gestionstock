@@ -1,0 +1,196 @@
+/*
+.page-form {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-container {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 10px 30px rgba(135,206,235,.3);
+}
+
+.form-label {
+    font-weight: bold;
+    color: var(--text-muted);
+}
+
+.required-star {
+    color: red;
+}
+
+.stock-info {
+    background: #e6f7ff;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary);
+}
+*/
+/* --- تخصص ملف forms.css: تنظيم شكل النموذج وتفاصيل الإدخال فقط --- */
+/*
+.page-form {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}*/
+
+
+
+
+/* Forms ha4i l'el formulaire  
+form control lel cham el3tin kima nom ou prenom
+ou form-select lel champ eli fihoum takhtar kima fi transfere ta
+takhtar magasin eli bech etna9lelha */
+
+/*.form-control,
+.form-select {
+    border: 2px solid var(--secondary);
+    border-radius: 8px;
+      padding: 12px;
+    /* height: 45px;  <-- السطر هذا هو اللي عامل المشكلة، فسخوا أو ردو تعليق *//*
+    font-size: 1rem;
+    line-height: 1.5; /* تضمن إن الكتيبة تجي في الوسط *//*
+}*/
+
+
+/* التعديل اللي عملناه قبيلة خليه باش يضمن الـ select ديما يخدم */
+/*.form-select {
+    height: auto !important; 
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+
+
+.form-container {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 100%;
+    /* استعملت شفافية خفيفة من اللون الموجود في base *//*
+    box-shadow: 0 10px 30px rgba(135, 206, 235, 0.3); 
+}*/
+
+
+/* تفاصيل الـ Input اللي مش موجودة في base */
+
+
+/* تنبيهات خاصة بالكمية والمخزون *//*
+.stock-info {
+    background-color: #e6f7ff;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 25px;
+    border-left: 4px solid var(--primary);
+}
+
+.stock-title {
+    color: var(--text-muted);
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.stock-value {
+    color: var(--primary);
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+    */
+
+
+
+/*.section-divider {
+    border-top: 1px solid #eee;
+    margin: 25px 0;
+}
+
+.form-title {
+    color: var(--text-muted);
+    font-weight: bold;
+    margin-bottom: 20px;
+}*/
+
+/* تعديل بسيط للمسافات *//*
+.mb-3 {
+    margin-bottom: 20px !important;
+}*/
+/* عناصر تجميلية للفورم */
+.required-star {
+    color: var(--danger);
+}
+
+/* Forms ha4i l'el formulaire  
+form control lel cham el3tin kima nom ou prenom
+ou form-select lel champ eli fihoum takhtar kima fi transfere ta
+takhtar magasin eli bech etna9lelha */
+
+.form-control,
+.form-select {
+    border: 2px solid var(--secondary);/*HA4I ELI TA3mel eletar eli fi champ */
+    border-radius: 8px;
+     padding: 12px;
+    /* height: 45px;  <-- السطر هذا هو اللي عامل المشكلة، فسخوا أو ردو تعليق */
+    font-size: 1rem;/* kouber champ */
+    line-height: 1.5; /* xen et5eb etji lektiba eli fi champ  تضمن إن الكتيبة تجي في الوسط */ 
+}
+/* ha4i lel label eli tetektab fou9 champ*/ 
+.form-label {
+    color: var(--text-muted); /* نعيطو للمتغير من base.css */
+    font-weight: bold;
+   margin-bottom: 10px;
+    text-align: left;
+   display: block;
+   /*
+➡️ تخلي العنصر يهبط في سطر جديد
+➡️ ياخو العرض الكل (100%) متاع الـ container
+➡️ تنجّم تتحكّم في width / height / margin / padding
+
+كيفاش يتصرّف
+مثال:
+
+<span>Test</span>
+<span>Test2</span>
+بدون block (inline):
+➡️ يظهرو جنب بعضهم
+
+Test Test2
+مع display: block
+span {
+  display: block;
+}
+➡️ كل واحد في سطر وحدو
+
+Test
+Test2
+    display: block;*/
+}
+/*hover = mouse only
+focus = click + keyboard
+elfare9 b'en focus ou hover elou hover ki yet3ata souris
+ 3alaha ou focus ki telzel 3alaha etbatel 
+*/
+.form-control:hover,
+.form-select:hover {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 .25rem rgba(30,144,255,0.2);
+}
+
+.alert-success {
+    background-color: #e6ffe6;
+    color: var(--success);
+    border-left: 5px solid var(--success);
+}
+
+.alert-danger {
+    background-color: #ffe6e6;
+    color:var(--dange);
+    border-left: 5px solid var(--dange);
+}

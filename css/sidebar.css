@@ -1,0 +1,215 @@
+/* Sidebar Container *//*
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background: white;
+    border-right: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+/* Logo / Top Section *//*
+.sidebar-header {
+    padding: 20px;
+    text-align: center;
+}
+
+/* Menu Items *//*
+.sidebar-menu {
+    flex-grow: 1;
+    padding: 10px 0;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 25px;
+    text-decoration: none;
+    color: #4682b4; /* Ta couleur var(--text-muted) *//*
+    transition: all 0.3s ease;
+    gap: 12px;
+    font-weight: 500;
+}
+
+.menu-item i {
+    font-size: 1.2rem;
+}
+
+/* Active State (Bleu comme sur ton image) *//*
+.menu-item.active {
+    background-color: #e7f1ff;
+    color: #1e90ff;
+    border-right: 4px solid #1e90ff;
+}
+
+.menu-item:hover:not(.active) {
+    background-color: #f8fbff;
+    color: #1e90ff;
+}
+
+/* Logout Button at Bottom *//*
+.logout-section {
+    padding: 20px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.btn-logout {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ff6b6b;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.btn-logout:hover {
+    background: #fff5f5;
+}
+*/
+/* fichier css externe yet7at em3a eli 3anthou menu houma dashboard admin ou employee
+etraka7 ken partie eli feha lien eli einajem youtekhnenhoum user  */
+/* ========== Sidebar Container ========== */
+
+/*ha4i lelkol */
+.sidebar {
+    width: 250px;
+    /*askher width etnajem ta3tihoum gi classe sidebar */
+      min-width: 250px;
+    height: 100vh;
+   /* background: white;*/
+    /*bech ya3mel estar betoul 3ala leimin youfsel b'en iframe ou menu*/
+    border-right: 2px solid var(--secondary);
+    display: flex;
+    /*becghh etrateb el3aneser(kima logo ou nav-menu ou menu item) eli fi div sidebar  bech maikounouch takhnin eb3a4houm */
+    /* ترتيب العناصر داخل السايدبار عمودياً (فوق بعضهم) */
+    flex-direction: column;
+    /*bech sidebareli fih iframe maietoukhlouch eb3a4houm "*/
+
+    position:  relative ;
+   /*  bech you4emlou enou ki yabta you4her m'en foU9  ou men  leimin enajem ena7ihoum lana 7atet position relative hya affichineque fi awel blasa farkha
+   top: 0;
+    left: 0;*/
+    /*bech ken kienetou fatou toul kouber pc eiwali etkhalik tahnet ou tatla3 bech etnajem tousel le lien elkol fi menu */
+    /* تفعيل الـ Scrollbar داخل السايدبار فقط إذا كانت الروابط أطول من الشاشة */
+     overflow-y: auto;
+}
+
+
+/* ========== Header / Logo ========== 
+ha4i bech etrake7  header emta3  menu*/
+.sidebar-header {
+    padding: 25px;
+    text-align: center;
+    /*bech yoursem khat m'en louta */
+    border-bottom: 2px solid var(--secondary);
+}
+/*titre emta3 menu stocksyst*/
+.sidebar-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    border-bottom: 2px solid var(--secondary); /* هذا هو السطر اللي في الصورة */
+  
+}
+
+/* ========== User Info ========== 
+haki emta3 espace eli yeT7at feha donner emta3 user kima nom ou email 
+.user-info {
+    background: #e6f7ff;
+    margin: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary);
+}
+    */
+
+/* ========== Menu ========== */
+/* ha4i lel lienet elkol */
+.nav-menu {
+    flex: 1;
+    padding: 20px 0;
+}
+/* hya eli etzaiel lie, ha4a ali ya3ti ma4her emna4em le lien 9bal matenzel 3alih*/
+.menu-item {
+    /* display hya eli et7atet el lien ou <p>ou h2 ou i ki yabtaw em3a eb3a44houm kifach you4ehrou 
+    kima hne fama lien <a> ou <i> flex tou4men eli houma you4ehtou bejnab eb3a4houm m'en kherha i fi estar ou lien fi estar eikounou  flex etkhalik tet7aKem bi height ou weight miche kima 
+    inline matnajemech tet7akem b'ei heidth ou weight 
+    القيمة,هل يبدأ سطر جديد؟,هل يقبل Width/Height؟,الاستخدام الشائع
+block,نعم,نعم,الأقسام الرئيسية، الفقرات
+inline,لا,لا,النصوص الملونة، الروابط
+inline-block,لا,نعم,الأزرار، البطاقات الصغيرة
+none,-,-,إخفاء العنصر تماماً */
+    display: flex;
+    /*etkhali lien ou i farert niveau mich wa7ta a3la m'en loukhra    */
+    align-items: center;
+    /* etkhali espace ben i ou lien ki mat7outhoumech yabtaw nas9in eb3a4houm */
+    gap: 12px;
+    /* ta3ti espace takheli lel ali fi wouset classe menu_item (i ou lien) 12 lel eimin ou leysar ou 25 lel fou9 ou louta  */
+    padding: 12px 25px;
+   /* margin-bottom: 10px; espace externe eloutani b'en lien ou eli ta7tou */
+   /*هي المسافة الخارجية اللي تخلّي العنصر يبعد على "جاره" اللي تحته.*/
+    margin-bottom: 10px;
+    text-decoration: none;
+    color: var(--text-muted);
+    /*taille elkhat */
+   /* font-weight: 500;*/
+  
+      font-weight: bold;
+    
+
+   /* border-radius: 8px;*/
+   /* haki etkhali ay taj=khir eisir fisa3kima wa9et souri you9reb 
+   backround yetbatel fi 0.3secande */
+    transition: 0.3s;
+}
+/* hakiç emta3 ei9ounet eli em3a lien kima font_weight ama weidth matekhtemech bi px 
+.menu-item i {
+    font-size: 1.2rem;
+}
+    */
+
+
+/* Hover  haki bech ki you9reb souris tetbatel backround emta7a 
+na7et :not(.active) lena ha4i ma3nah a eli style ha4a yekhtem em3a lien elkol ken lien 
+eli 3anthoum classe active ma3naha eli nazel 3alih makher ki tou9reb souris etbatel backround emta3ou   */
+.menu-item:hover {
+    background: #e6f7ff;
+    color: var(--primary);
+}
+
+/* Active
+.menu-item.active {
+    background-color: #e7f1ff;
+    color: var(--primary);
+    border-right: 4px solid var(--primary);
+}
+
+/* ========== Logout ========== */
+.logout-section {
+   /* espace eloutali emta3 div */
+    padding: 20px;
+    /*ta3mzel khat elfou9 div logout-section */
+    border-top: 2px solid var(--secondary);
+}
+
+.btn-logout {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    /*border-radius: 8px;*/
+    text-decoration: none;
+    font-weight: bold;
+    color: var(--danger);
+    transition: 0.3s;
+}
+
+.btn-logout:hover {
+    background: #fff5f5;
+}
+

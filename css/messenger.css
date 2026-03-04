@@ -1,0 +1,194 @@
+/* messenger.css */
+.page-messanger {
+    border-radius: 5rem;
+    overflow: hidden;/* bech matkhalich contenu youkhrej m'en page emta7*/
+    /* max-width: 850px;          /* style inline */
+    margin: 0 auto;             /* mx-auto */
+    border-radius: 1rem;        /* rounded-4 ≈ 1rem */
+    border: 0;                  /* border-0 */
+    background-color: #fff;     /* bg-white */
+    /*box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075); /* shadow-sm */
+}
+/*.messenger-card {
+    border: 1px solid #eef2f7;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+}*/
+
+.messenger-header {
+    background-color: #ffffff;
+    display: flex;/* hya etkhalic etna4em el3anaser eli taKHEL clasee haka */
+ /* tekhtem em3a flex bech etwaze3 el 3anaser */   
+    justify-content: space-between;
+    align-items: center;/*tekhtem em3a flex bech rtkhali lektiba fi wouset 3amoutia */
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6; /* لون افتراضي Bootstrap للحدود */
+    padding-left: 1.5rem;
+padding-right: 1.5rem;
+}
+/*.messenger-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg);
+}
+
+/* Sidebar */
+.user-sidebar {
+    background-color: #ffffff;
+    width: 320px;
+     overflow-y: auto;
+         transition: all 0.2s ease;
+    border-bottom: 1px solid #f8fafc !important;
+}
+/* ha4i emta3 toura emta3 kol user eli feha awel 7aref m'en esmou */
+.user-avatar {
+border-radius: 50%;
+background: #0d6efd;
+color: white;
+display: flex;
+align-items: center;
+justify-content: center;
+margin-right: 1rem;
+font-weight: bold;
+/*box-shadow: 0 2px 4px rgba(0,0,0,0.1);*/
+width: 40px;
+height: 40px;
+min-width: 40px;
+
+}
+.chat-icon {
+   /* display: inline-block;       /* pour qu’il se comporte comme une icône */
+    font-size: 1.5rem;           /* équivalent à fs-4 */
+    color: #0d6efd;              /* couleur primaire Bootstrap */
+    margin-right: 1rem;        /* équivalent à me-2 */
+    /* Pour afficher l'icône, il faut la remplacer par un contenu, svg ou font-icon */
+}
+.messenger-header h5{
+    margin-bottom: 0rem;
+font-weight: bold;
+color: var(--primary);
+}
+.lien{
+  
+   /* display: inline-block;                 /* se comporte comme un badge */
+    background-color: #f8f9fa;             /* bg-light */
+    color: #0d6efd;                        /* text-primary */
+    border: 1px solid #cfe2ff;             /* border + border-primary-subtle */
+    border-radius: 50rem;                  /* rounded-pill */
+    padding: 0.5rem 1rem;                  /* py-2 px-3 */
+    font-size: 0.75rem;                    /* optionnel, pour taille badge */
+    white-space: nowrap;                /* éviter le retour à la ligne */
+    text-decoration: none;
+
+}
+    
+
+
+     
+/*haki emta3 kol user */
+.list-group-item {
+    transition: all 0.2s ease;
+    /* ya3mel estar ta7et kon user */
+    border-bottom: 1px solid #f8fafc !important;
+}
+
+.list-group-item:hover {
+    background-color: #f0f7ff;
+}
+
+/* التنسيق الخاص باليوزر المختار حالياً */
+/*.active-chat {
+    background-color: #f0f7ff !important;
+    border-right: 4px solid #0d6efd !important;
+}*/
+
+/*.active-chat h6 {
+    color: #0d6efd !important;
+}*/
+/* elpartie  etinania you4ehrou feha msget */
+.chat-area {
+    flex-grow: 1;          /* تاخو المساحة الفارغة */
+    display: flex;         /* Flexbox  bech eirateb el3aneser eli fi takhel class chat-area */
+    flex-direction: column;/* ترتيب عمودي */
+    background: white;     /* خلفية بيضاء */
+}
+.chat-messages {
+     display: flex;            /* flexbox bech etrateb en3anaserkima div  eli takhel nafes class   */
+    padding: 1.5rem;  
+    /*bech takhou ezspace eli e93at m'en chat-area            */       
+    flex-grow: 1; 
+    /*bech ken3atet  msg je atwel m'en toun el3ounser eli howa chat-msg eTRAk7ou bech maiefsetech */
+    overflow-y: auto;   
+    flex-direction: column;   /* ترتيب الرسائل عمودي */
+    /*  gap: 1rem; ma3naha hya etkhali espace b'en div ou div eli takhel nafes classe   ou tekhtem ken em3a display:flex */
+  /*  gap: 1rem;                /* المسافة بين كل رسالة والأخرى */   
+
+}
+
+
+/* Bubbles */
+.bubble {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    position: relative;
+   margin-bottom: 1rem;
+}
+
+
+.admin-msg {
+    background-color: #0d6efd;
+    color: white;
+    border-bottom-right-radius: 3px;
+}
+
+.user-msg {
+    background-color: #f1f5f9;
+    color: #1e293b;
+    border-bottom-left-radius: 3px;
+}
+
+.msg-time {
+    font-size: 0.65rem;
+    margin-top: 5px;
+    opacity: 0.7;
+    text-align: right;
+}
+
+/* Empty State  lejoula eli ta7et icon ki yabta makech khater 7ata user bech ta7ki em3ah */
+.empty-chat h6 {
+    color: var( --secondary) ; /* اللون السماوي اللي في التصويرة */
+    font-size: 1.1rem;
+}
+.btn-envoye {
+    background-color:var( --secondary); /* نفس btn-primary من Bootstrap */
+    color: white;              /* لون الأيقونة أبيض */
+    border: none;              /* إزالة أي border */
+    border-radius: 50%;        /* لجعل الزر دائري */
+    width: 42px;               /* عرض الزر */
+    height: 42px;              /* ارتفاع الزر */
+    
+    display: flex;             /* لجعل الأيقونة في الوسط */
+    align-items: center;       /* تمركز عمودي */
+    justify-content: center;   /* تمركز أفقي */
+
+  
+    transition: background 0.3s ease; /* تأثير تغيير اللون عند hover */
+}
+
+.btn-envoye:hover {
+    background-color: var( --primary-dark); /* تأثير hover أغمق قليلًا */
+}
+
+
+/* Scrollbar */
+/*#chatBox::-webkit-scrollbar, .user-sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+#chatBox::-webkit-scrollbar-thumb, .user-sidebar::-webkit-scrollbar-thumb {
+    background-color: #e2e8f0;
+    border-radius: 10px;
+}

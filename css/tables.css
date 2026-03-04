@@ -1,0 +1,71 @@
+/*ha4i esta3maltha fi mouvement emta3 employe ou demande emta3 admin fichier admin_demande  */
+/*.table thead {
+    background: #f8fbff;
+}
+/* haki emta3  colone eloun eli fih titre */
+/* haki nel paget ethnin lel awel ligne fi tableau */
+
+.table thead th {
+    color: var(--text-muted);
+    /*ma3naha el3anawin en majuscule*/
+    text-transform: uppercase;
+    font-size: .85rem;
+    text-align:center;
+
+}
+/* haki emta3 colone 3 eli fi index quantite */
+/*.table td:nth-child(2) { 
+    max-width: 300px; 
+    word-wrap: break-word; 
+    white-space: normal  ;
+}*/
+
+/* haki lestyle emta3 tableau eli fi page admin_demande 
+emta3 colone detail de l'operation*/
+.badge-msg {
+    /*eikhali kon 3onser(span )yakhou estar wa7tou ou 
+    bech maioutkhelech eb3a4ha fi detail emta3 operation b'en doner emta7a 
+    ou ben operation ou operation */
+    display: block;
+    /*ma3naha contenui yakhou 100%m'en kouber cadre 
+    eli wakhe4 howa 40% m'en kouber colone ama maneset7a9ouchi 
+    3alakhatter 7atet word-bork*/
+    /*width: 100%;
+    /*hya bech ki  yabda eljomla etfout kkouber cadre tarje3 lestar ena7aha 
+    3alakhater eli 3anti matfoutech kouber cadre*/
+  /*  word-break: break-all;*/
+  /*espace b'en ester ou estar 1.4*/
+    line-height: 1.4;
+    /*ESPACE B4EN SPAN HOWA L4EKLAM OU CADRE espace interne 2px*/
+    padding: 12px;
+     background: #f0f7ff;
+    color: var(--primary);
+
+    border-radius: 8px;
+}
+
+    
+
+.btn-accept {
+    background: var(--primary);
+    color: white;
+    border-radius: 8px;
+}
+
+.btn-reject {
+    background: #ffefef;
+    color: var(--danger);
+    border-radius: 8px;
+}
+
+/*.mvt-card {
+    background: rgb(65, 37, 37);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    transition: .3s;
+}
+
+.mvt-card:hover {
+    transform: translateX(5px);
+}*/

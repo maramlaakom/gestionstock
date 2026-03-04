@@ -1,0 +1,239 @@
+<?php
+
+
+// ربط قاعدة البيانات
+require_once '../../includes/connexion.php';
+require_once '../../employe_stock/auth.php';
+require_role(["Admin","employe_stock"]);
+
+// 1. جلب كلمة البحث
+// Gestion de la recherche : récupération du mot-clé depuis l'URL
+if (isset($_GET['search'])) {
+    $search = $_GET['search'];
+} else {
+    $search = "";
+}
+//if (isset($_SESSION['role'])) {
+    // Si oui, on utilise le rôle stocké
+    $role = $_SESSION['role'];
+//} else {
+    // Sinon, on donne le rôle 'employee' par défaut
+  //  $role = '';
+//}
+
+$CAPACITE_DEFAUT = 2000; 
+
+
+    // 2. تطبيق منطق البحث (SQL)
+    if ($search != "") {
+        //lehft join nesta3emlouh bech eijib  magasin elkoll 7ata ou ken ma3ouch marbout bi article  ma3naha ma3antouch article
+        $sql = "SELECT m.*, 
+        /** bech te7seb 9etach 3antou m'en type article lena kon type 3antou model eli yet7at fi gestionarticle ou 3antou id ou ki ne7seb 9etach m'en id na3ref 9etch m'en type */
+                       
+                       COUNT(a.id_article) AS nb_types, 
+                       /** bech ken quantie feha null enbatalha 0  */
+                       IFNULL(SUM(a.quantite), 0) AS total_qte
+                FROM magasin m
+                /*left  join bech etjb e7sayat emta3 kol magasin kima 3atet type article ou kol type ou quantite emta7 */
+                LEFT JOIN article a ON m.id_magasin = a.id_magasin AND a.etat = 'actif' AND a.quantite > 0
+                WHERE m.nom_magasin LIKE ? 
+                GROUP BY m.id_magasin";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(["%$search%"]);
+    } else {
+        $sql = "SELECT m.*, 
+                       COUNT(a.id_article) AS nb_types, 
+                       IFNULL(SUM(a.quantite), 0) AS total_qte
+                FROM magasin m
+                LEFT JOIN article a ON m.id_magasin = a.id_magasin AND a.etat = 'actif'AND a.quantite > 0
+                GROUP BY m.id_magasin";
+        $stmt = $pdo->query($sql);
+    }
+    $magasins = $stmt->fetchAll();
+
+  //tjib  m'en article fi col magasin bech affichihoum 
+  //foreach bech etjib liste emta3 article fi kolmagasin
+    foreach ($magasins as &$m) {
+        $stmt_art = $pdo->prepare("SELECT nom_article, quantite FROM article WHERE id_magasin = ? AND etat = 'actif' AND quantite >0 ");
+        $stmt_art->execute([$m['id_magasin']]);
+        //liste article variable ejtita enti zetha fi tableau m eli eijib magasin m'en bd
+       // بعد السطر اللي كتبتيه، ولات هكا: ['id_magasin' => 1, 'nom_magasin' => 'Tunis', 'nb_types' => 5,
+         //'list_articles' => [ ['nom' => 'PC', 'qte' => 10], ['nom' => 'Souris', 'qte' =>
+        $m['list_articles'] = $stmt_art->fetchAll();
+        unset($m);
+    }
+    
+
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Magasins</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="../../css/cards.css">
+    <link rel="stylesheet" href="../../css/forms.css">
+</head>
+<body>
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0 "><i class="bi bi-building me-2"></i> Gestion des Magasins</h2>
+            <p class="text-muted small">Gestion des stocks et inventaire par entrepôt</p>
+        </div>
+         <?php if(/*isset($role) &&*/ $role == 'admin'): 
+            /*px-4 py-2--> kenet em3a button aajoute hya tet7akm fi el3are4 ou doul button*/?>
+        <a href="ajout_magasin.php" class="btn btn-primary   ">
+            <i class="bi bi-plus-lg "></i> Ajouter Magasin
+        </a>
+              <?php endif; ?>
+    </div>
+
+    <div class="search-container  ">
+        <form method="GET">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control p-3 " 
+                       placeholder="Rechercher un magasin ..." >
+                <button class="btn btn-primary px-4"><i class="bi bi-search"></i></button>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="row g-4">
+        <?php if(empty($magasins)): ?>
+            <div class="col-12">
+                <div class="no-results shadow-sm">
+                    <i class="bi bi-building-exclamation" style="font-size: 4rem; color: var(--secondary);"></i>
+                    <h4 class="mt-3 fw-bold " style="color: var(--primary);">Aucun magasin trouvé</h4>
+                    <p class="text-muted">Essayez un autre mot-clé ou créez un nouveau magasin.</p>
+                </div>
+            </div>
+        <?php else: ?>
+            <?php foreach($magasins as $m): 
+              // حساب نسبة الامتلاء
+                $usage_percent = ($m['total_qte'] / $CAPACITE_DEFAUT) * 100;
+                //a7mer ken quantite akther m'en 85%
+               if ($usage_percent > 85) {
+               $bar_color = 'bg-danger';
+              // asfer ken ben 50ù ou 85%
+                } elseif ($usage_percent > 50) {
+                $bar_color = 'bg-warning';
+                } else {
+                    //OU akh4er ken a9el m'en 50%
+                $bar_color = 'bg-success';
+                }
+            
+
+
+            ?>    
+                <div class="col-4">
+                    <div class="user-card ">
+                        
+                        <div class="mb-3">
+                            <h4 class="fw-bold text-dark mb-1 text-uppercase"><?= htmlspecialchars($m['nom_magasin']) ?></h4>
+                            <div class="text-primary small">
+                                <i class="bi bi-geo-alt"></i> <?= htmlspecialchars($m['adresse']) ?>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="small text-muted fw-bold">Utilisation</span>
+                                <span class="fw-bold small text-dark"><?=($m['total_qte']) ?> / <?= $CAPACITE_DEFAUT ?></span>
+                            </div>
+            <!-- classe =progress hya emta3 eltoura emi et7out feha partie eli mousta3mla b'en alwan / bar_color howa style css eli bech uakhtjou elcontitue eli fi magasin
+             progress :hya bootstrap eli ta3mel eli eitar / progress-bar hya bootstrap bartie l'emlawen eli eiwari enesba -->
+             
+                            <div class="progress" style="height: 10px; background-color: #f0f2f5; border-radius: 10px;">
+                                <div class="progress-bar <?= $bar_color ?> rounded-pill" 
+                                    
+                                    
+                                        style="width: <?= min($usage_percent, 100) ?>%"><?/** width emta3 elpartie elemlawna eli ta3tik 9etech pourcentage eliesta3maltha haKA ken  et3abet akther m'en capacite emtaèa etwali takhou 100% widh emta7
+                                      * 3alakhater eiwali ken mat7outech ou etfout eiwali yatla3 m'en cadre emta3 magasin   */?> </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-6">
+                                <div class="border rounded p-3 text-center bg-white ">
+                                    <h3 class="fw-bold mb-0 text-dark"><?= $m['nb_types'] ?></h3>
+                                    <small class="text-primary fw-bold">nb peripherique </small>
+                                </div>
+                            </div>
+                            <!-- border hya eli ta3mel carde emta3 w
+                             en tou4her kelmet total QTE MP-3 hya toul carde- rounted bootstrab  7aja tab3 designe emta3carde border hya eli ta3mel  cadre ou shasaw hya em3a border ta3melcarde -->
+                            <div class="col-6">
+                                <!--shadow-sm-->
+                                <div class="border rounded p-3 text-center bg-white ">
+                                    <h3 class="fw-bold mb-0 text-dark"><?= $m['total_qte'] ?></h3>
+                                    <small class="text-primary fw-bold">Total Qte</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="fw-bold text-muted small mb-2 text-uppercase">Contenu recent :</label>
+                            <!--border-start :ta3mel khat fi jnab leysar /border-4 kouber elkhat /border-primary loul elkhat  -->
+                            <div class="bg-light rounded p-3 border-start border-4 border-primary ">
+                                <?php if(empty($m['list_articles'])): ?>
+                                    <div class="text-muted small text-center italic">Aucun article actif</div>
+                                <?php else: ?>
+                                    <?php foreach($m['list_articles'] as $art): ?>
+                                        <div class="d-flex justify-content-between align-items-center mb-2 border-bottom  border-white">
+                                            <span class="text-dark small"><?= htmlspecialchars($art['nom_article']) ?></span>
+                                            <span class="badge bg-white text-primary border  px-2"><?= $art['quantite'] ?></span>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                                        <!-- mt-auto enkhalaha 3alakhater ta3ti margi auto bech eikounou boutton elkol faret ersti9ama -->
+                        <div class="d-flex gap-2 mt-auto pt-3">
+                               <?php if( $role == 'admin'): 
+                                //  onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce magasin ?')"> ha4i bech ki ten
+                                // ten zel 3ala button suprimer tatna3lek alert eli feha msg eli fi confirm ou oui ou non  ?>
+                            <a href="modifier_magasin.php?id=<?= $m['id_magasin'] ?>" 
+                               class="btn btn-outline-primary flex-grow-1 ">
+                               <i class="bi bi-pencil-square me-1"></i> Modifier
+                            </a>
+                            <a href="suprimer_magasin.php?id=<?= $m['id_magasin'] ?>" 
+                               class="btn btn-outline-danger " 
+                               
+                               onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce magasin ?')">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                             <?php endif; ?>
+                                  
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+</div>
+<?php if (isset($_GET['msg'])): ?>
+    <script>
+        <?php if ($_GET['msg'] == 'erreur'): ?>
+            alert("Impossible de supprimer : ce magasin contient encore des articles !");
+        <?php elseif ($_GET['msg'] == 'deleted'): ?>
+            alert("Magasin supprimé avec succès.");
+        <?php endif; ?>
+        
+        // تنظيف الرابط (URL) باش الميساج ما يقعدش يظهر كل ما تعمل Refresh
+       
+    </script>
+<?php endif; ?>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
