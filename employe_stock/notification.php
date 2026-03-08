@@ -1,18 +1,14 @@
 <?php
-// session_start();
 require_once '../includes/connexion.php';
 require_once "auth.php";
-require_role([ "employe_stock"]); // Houni el zouz i-najmou ydokhlu
+require_role([ "employe_stock"]); 
 
 $id_user = $_SESSION['id_utilisateur'];
 
 try {
-    // 1. Nakhou el notifications
     $stmt = $pdo->prepare("SELECT * FROM notification WHERE id_utilisateur = ? ORDER BY date_notification DESC LIMIT 30");
     $stmt->execute([$id_user]);
     $notifs = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // 2. n-marquiwhom 'lu'
     $update = $pdo->prepare("UPDATE notification SET etat = 'lu' WHERE id_utilisateur = ? AND etat = 'non_lu'");
     $update->execute([$id_user]);
 
@@ -53,7 +49,6 @@ try {
     </div>
 </div>
     </div>
-<!--"section-divider khat yafsel b'en a9sem div ou civ  -->
     <div  style="margin-top: 0;"></div>
  <?php if (empty($notifs)): ?>
         <div class="no-notif">
@@ -64,33 +59,18 @@ try {
     <?php else: ?>
         <div> 
             <?php foreach ($notifs as $n):
-            /*
-                $is_stock = (stripos($n['contenu'], 'stock') !== false || stripos($n['contenu'], 'épuisé') !== false);
-                $is_msg   = (stripos($n['contenu'], 'demande') !== false || stripos($n['contenu'], 'message') !== false);
-                */
                  $is_msg   =  stripos($n['contenu'], 'message') !== false;
-                // Design Logic
                     if ($n['etat'] === 'non_lu') {
                         $card_class = 'notif-no-lu';
                     } else {
                         $card_class = 'notif-card';
                     }
-
-                                    
-                /*if ($is_stock) {
-                    $icon = "bi-exclamation-triangle-fill";
-                    $bg   = "bg-stock";
-                    $label = "Alerte Inventaire";
-                } 
-                    */
-                if ($is_msg) {
-                    //ou icon hya etaswira 
+                if ($is_msg) {      
                     $icon = "bi-envelope-paper-fill";
                     $bg   = "bg-msg";
                     $label = "Nouveau Message";
                 } else {
                     $icon = "bi-info-circle-fill";
-                    //bg hya backround emta3 icon 
                     $bg   = "bg-info";
                     $label = "Information";
                 }
@@ -102,7 +82,6 @@ try {
                     </div>
 
                     <div class="notif-content ">
-                        <!--class="d-flex justify-content-between align-items-center mb-1"kanou fi div eli ta7tou -->
                         <div >
                             <h6 ><?= $label ?></h6>
                             <?php if ($n['etat'] === 'non_lu'): ?>

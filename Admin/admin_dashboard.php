@@ -110,70 +110,19 @@ require_role(["Admin"]);
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/sidebar.css">
-    <!--<link rel="stylesheet" href="../css/admin.css">-->
-    <style>
-  
-        /*body { margin: 0; padding: 0; overflow: hidden; display: flex; height: 100vh; background: #f4f7fe; }*/
-        
+    <style>        
       body {
-        /**body howa fih deux 3anaser howa main_container ou sidebar esta3malet flesxbech eikounou
-        bejnab eb3a4houm ou a3tetle siedebar height 100vh ou weight 250px ou le maine flex 1 bech takhou eb9iet page   */
     display: flex;
-    /*flex-direction: row;*/
 }
-
-     /*   .sidebar { width: 250px; min-width: 250px; height: 100vh; position: relative !important;overflow-y: auto; } */
-        
-/* etrake7 partie eli yet7al feha paget target ma3naha paget emta3 ki tenzel 3ala lien yet7al  */
-      /* .main-container { flex-grow: 1; 
-    height: 100vh; 
-    overflow: hidden;
-    position: relative; }  */
     .main-container {
-    /*  خلي الـ container ياخذ بقية مساحة الشاشة 
-    ou lazem enti etkoun 7atet fi body  display:flex hya eli ta3ti elmisa7a elmoutaba9ia lel main*/
     flex: 1;
-    /* 
-height: 100vh;
-Permet au conteneur d'occuper toute la hauteur de l’écran,
-quel que soit le type d’appareil (PC, tablette ou smartphone),
-afin d’assurer un alignement uniforme avec la sidebar.
-*/
-
-/*
-overflow: hidden;
-Empêche le débordement du contenu hors de l’écran
-et évite l’apparition d’un scroll global,
-notamment sur les écrans mobiles.
-*/
-/** heigth ou overlow ki etna7ihoum ou et7el site 3ala 
-pc you93et emrekla 3alakhater ecran pc ekbir ou contenu e9sir ama
-ki et7elou fi telephone eiwali contenu emta3 iframe youtkhel ba34ou  */
-    /* container takhou toul echacha elkol  tet7at fi siedbar zata bech eikoulou nafes elkober  */
     height: 100vh;
-    /**bech eikhali contenu matetna3ech m'en chacha  */
     overflow: hidden;
 }
-      /*  iframe { width: 100%; height: 100%; border: none; }*/
-        /*iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    display: block;
-    // eikhaliouk tatla3 ou tahbet ki hyabda contenu atwel m'en page 
-    matet7atech fi iframe lan hya espace yet7al fi woustou page tet7at fi page eli feha contenu kima  index
-    overflow-y: auto;
-    overflow-x: hidden;
-}*/
-/**أي صفحة تفتح في الـ iframe تظهر داخل نفس الإطار بدون ما تغيّر layout الكل. */
 iframe {
-    /** bech cntenu eli yet7al fi iframe you4her 3ala 3ore4 iframe elkol  */
    width: 100%;
     height: 100%;
-    /** bech maikounech fama cadre lel iframe  3alakhater ba3e4 navigater 
-    kit7el fihoum site ya3tiou border eftira4i */
     border: none;
-   /* display: block;*/
 }
 
     </style>
@@ -200,21 +149,7 @@ iframe {
     </div>
 
     <div class="main-container">
-<!-- fi iframe src=index.php hak 3alah awel matoutkhel bi admin tal9a index-->
         <iframe name="contentFrame" src="index.php"></iframe>
     </div>
-    
-    <script>
-    /*
-        const links = document.querySelectorAll('.menu-item');
-        links.forEach(link => {
-            link.addEventListener('click', function() {
-                links.forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-        */
-        
-    </script>
 </body>
 </html>

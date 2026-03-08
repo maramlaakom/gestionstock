@@ -3,10 +3,7 @@
 require_once __DIR__ . '/../../includes/connexion.php';
 require_once '../../employe_stock/auth.php';
 require_role(["Admin"]);
-//verifier si methode uytilise dans la formulaire pour renvoyer les donner est post 
       if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-   // donner les donner  m'en formulaire ex: variable mdp takhou mote de passe  ecrire dans la formulaire 
-   //label name = mot_de_passe
     $nom = $_POST['nom'];
     $prenom = $_POST['prenom']; 
     $email = $_POST['email'];
@@ -20,9 +17,6 @@ require_role(["Admin"]);
         VALUES (?, ?, ?, ?, ?, 'actif')
     ");
   if(  $stmt->execute([$nom, $prenom, $email, $mdp, $role])){
-    // ha4i bech ki etkamel etzit employe ejtit etraJ3ek wa7atha malkher matou93et telzelm 3ala anuler bech tarje3 m
-//ma3naha ba3et matenzel 3ala engistrer wa9etha php eijib donner eli zethoum  om'en Post ou etakhalhoum fi BD  ba3et etraj3ek 
-// autoumatique l'elpage listearticle ken employe etzat
         header("Location: listeutilisateur.php");
     exit;
       }  

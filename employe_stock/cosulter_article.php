@@ -1,28 +1,9 @@
 <?php
-
-
-// Demarrage de la session pour gerer l'authentification
-//session_start();
-
-// Inclusion du fichier de connexion a la base de donnees
 require_once '../includes/connexion.php';
 require_once "auth.php";
 require_role([ "employe_stock"]);
-
-// On verifie si le role existe dans la session
-//if (isset($_SESSION['role'])) {
-    // Si oui, on utilise le role stocke
-  //  $role = $_SESSION['role'];
-//} else {
-    // Sinon, on donne le role 'employee' par defaut
     $role = 'employe_stock';
-//}
-
-// Gestion de la recherche : recuperation duomot-cle depuis l'URL
 $search = $_GET['search'] ?? "";
-
-// Preparation et execution de la requete SQL selon la recherche
-
 if ($search != "") {
     $stmt = $pdo->prepare("SELECT a.*, m.nom_magasin 
                            FROM article a 
@@ -35,8 +16,6 @@ if ($search != "") {
                          LEFT JOIN magasin m ON a.id_magasin = m.id_magasin 
                          WHERE a.etat='actif'");
 }
-
-// Stockage de tous les resultats dans un tableau
 $articles = $stmt->fetchAll();
 ?>
 
@@ -85,8 +64,6 @@ $articles = $stmt->fetchAll();
         .info-row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #f8fafc; padding-bottom: 8px; }
         .info-label { color: #94a3b8; font-size: 0.85rem; }
         .info-value { font-weight: 600; color: #1e293b; font-size: 0.9rem; }
-        
-        /* Magasin Tag Style */
         .magasin-tag { color: #475569; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #e2e8f0; }
 
         .btn-modifier { background: #fff; border: 1px solid #e2e8f0; color: #1e293b; font-weight: 600; border-radius: 10px; padding: 8px; flex-grow: 1; text-align: center; text-decoration: none; }
