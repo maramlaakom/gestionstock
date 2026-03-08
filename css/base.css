@@ -8,15 +8,6 @@
     --text-muted: #4682b4;
 }
 
-/** {
-    box-sizing: border-box;
-}
-/* استعمل html body باش تزيد القوة (Specificity) */
-/*html body {
-    background-color: var(--bg) !important;
-    background: var(--bg) !important;
-}*/
-/* ha4i kiabda mafama 7ata article ou magasin ou demande */
         .no-results {
             text-align: center;
             padding: 40px;
@@ -28,12 +19,6 @@
       
 body {
     background-color: var(--bg) ;
-    /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;  => هذوما أنواع الخطوط اللي نستعملوهم إذا الخط الأول مش موجود */
-/* margin: 0;  => هذا ينحي الفراغ الافتراضي حول الصفحة، وإذا نحيتو ما يتأثر الكود الآخر */
-
-    /*font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; // ha4ouma anwa3 elkhat eeli testa3malhoumsayet bech et7outhoum 
-    margin: 0;//7ata ha4i zayta 3alakhate ki na7etha matbatel chay 
-    */
 }
 
 h2 {
@@ -42,25 +27,18 @@ h2 {
     padding-bottom: 10px;
     margin-bottom: 30px;
 }
-
-/* Buttons */
 .btn-primary {
-    /*important etnajem etna7ihoum important ma3naha awlawia lix=code ha4a 7ata ouken mawjout bootstrab em3ah aw ay css akher */
     background-color: #1e90ff  !important;
        border: none !important;
         color: white !important;
         padding: 10px 25px;
-        font-weight: bold;/* يجعل النص داخل الزر عريض  eikhali naw3iet lektiba eli fi takhel button blod */
+        font-weight: bold;
         border-radius: 5px;
-        font-size: 1rem;/* حجم الخط داخل الزر */
-        transition: background 0.3s ease;/*ma3naha souris ki tou9reb l'el button elcolor yetbatel fi 00.3s*/
-        white-space: nowrap; /* يمنع انقسام النص في الزر *//* يمنع النص من الانكسار لسطر جديد داخل الزر، يبقى في سطر واحد */
-         text-decoration: none;
-        
-      
+        font-size: 1rem;
+        transition: background 0.3s ease;
+        white-space: nowrap; 
+         text-decoration: none;     
 }
-
-
 .btn-primary:hover {
     background-color: var(--primary-dark);
       
@@ -83,25 +61,18 @@ h2 {
 .btn-secondary:hover {
     background-color: #5cb9e8;
 }
-
-/*howa eli ei7atet eblaset esountou9 eli fih formulaire */
 .page-form {
-    min-height: 100vh;        /* يخلي الصفحة تاخو طول الشاشة الكل */
-    display: flex;            /* نستعملو flex باش نوسّطو الفورم */
-    align-items: center;      /* توسيط عمودي (الفورم في وسط الشاشة من الفوق و اللّوطا) */
-    justify-content: center;  /* توسيط أفقي (الفورم في وسط الشاشة من اليمين و اليسار) */
-    padding: 20px;            /* مسافة داخلية باش الفورم ما يلصقش في حواف الشاشة */
+    min-height: 100vh;     
+    display: flex;          
+    align-items: center;      
+    justify-content: center;  
+    padding: 20px;          
 }
-
-/* الحاوية الرئيسية للفورم  /*howa eli eirake7 formulaire elkober emta7a  ou eirake7 tol elmouraba3 eli you4her fih formulaire */
-/*howa esountou9 eli fih formulaire ki etna7ih eiwali formulaire 
-fi page esar8a yrt7at fi xouset ama makhir card */
 .form-container {
-    background: white;        /* خلفية بيضاء للفورم */
-    padding: 30px;      /* eiba3et  lektiba 3ala 7awef card 30 يبعد الكتابة على الحواف من الداخل      /* مسافة داخلية داخل الصندوق */
-    border-radius: 10px;      /* تدوير الحواف */
-    max-width: 600px;         /* أقصى عرض للفورم (ما يكبرش أكثر من 600px) */
-    width: 100%;              /* ياخو العرض الكل داخل الصفحة الصغيرة */
-    /* ظل خفيف يعطي تأثير صندوق */
+    background: white;     
+    padding: 30px;     
+    border-radius: 10px;    
+    max-width: 600px;        
+    width: 100%;             
     box-shadow: 0 10px 30px rgba(135, 206, 235, 0.3);
 }

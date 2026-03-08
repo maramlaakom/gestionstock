@@ -1,64 +1,32 @@
 <?php
-
-
-// ربط قاعدة البيانات
 require_once '../../includes/connexion.php';
 require_once '../../employe_stock/auth.php';
 require_role(["Admin","employe_stock"]);
-
-// 1. جلب كلمة البحث
-// Gestion de la recherche : récupération du mot-clé depuis l'URL
 if (isset($_GET['search'])) {
     $search = $_GET['search'];
 } else {
     $search = "";
 }
-//if (isset($_SESSION['role'])) {
-    // Si oui, on utilise le rôle stocké
     $role = $_SESSION['role'];
-//} else {
-    // Sinon, on donne le rôle 'employee' par défaut
-  //  $role = '';
-//}
-
 $CAPACITE_DEFAUT = 2000; 
-
-
-    // 2. تطبيق منطق البحث (SQL)
     if ($search != "") {
-        //lehft join nesta3emlouh bech eijib  magasin elkoll 7ata ou ken ma3ouch marbout bi article  ma3naha ma3antouch article
-        $sql = "SELECT m.*, 
-        /** bech te7seb 9etach 3antou m'en type article lena kon type 3antou model eli yet7at fi gestionarticle ou 3antou id ou ki ne7seb 9etach m'en id na3ref 9etch m'en type */
-                       
-                       COUNT(a.id_article) AS nb_types, 
-                       /** bech ken quantie feha null enbatalha 0  */
-                       IFNULL(SUM(a.quantite), 0) AS total_qte
-                FROM magasin m
-                /*left  join bech etjb e7sayat emta3 kol magasin kima 3atet type article ou kol type ou quantite emta7 */
-                LEFT JOIN article a ON m.id_magasin = a.id_magasin AND a.etat = 'actif' AND a.quantite > 0
-                WHERE m.nom_magasin LIKE ? 
-                GROUP BY m.id_magasin";
+        $sql = "SELECT m.*, COUNT(a.id_article) AS nb_types, IFNULL(SUM(a.quantite), 0) AS total_qte FROM magasin m
+        LEFT JOIN article a ON m.id_magasin = a.id_magasin AND a.etat = 'actif' AND a.quantite > 0
+        WHERE m.nom_magasin LIKE ? 
+        GROUP BY m.id_magasin";
         $stmt = $pdo->prepare($sql);
         $stmt->execute(["%$search%"]);
     } else {
-        $sql = "SELECT m.*, 
-                       COUNT(a.id_article) AS nb_types, 
-                       IFNULL(SUM(a.quantite), 0) AS total_qte
+        $sql = "SELECT m.*, COUNT(a.id_article) AS nb_types, IFNULL(SUM(a.quantite), 0) AS total_qte
                 FROM magasin m
                 LEFT JOIN article a ON m.id_magasin = a.id_magasin AND a.etat = 'actif'AND a.quantite > 0
                 GROUP BY m.id_magasin";
         $stmt = $pdo->query($sql);
     }
     $magasins = $stmt->fetchAll();
-
-  //tjib  m'en article fi col magasin bech affichihoum 
-  //foreach bech etjib liste emta3 article fi kolmagasin
     foreach ($magasins as &$m) {
         $stmt_art = $pdo->prepare("SELECT nom_article, quantite FROM article WHERE id_magasin = ? AND etat = 'actif' AND quantite >0 ");
         $stmt_art->execute([$m['id_magasin']]);
-        //liste article variable ejtita enti zetha fi tableau m eli eijib magasin m'en bd
-       // بعد السطر اللي كتبتيه، ولات هكا: ['id_magasin' => 1, 'nom_magasin' => 'Tunis', 'nb_types' => 5,
-         //'list_articles' => [ ['nom' => 'PC', 'qte' => 10], ['nom' => 'Souris', 'qte' =>
         $m['list_articles'] = $stmt_art->fetchAll();
         unset($m);
     }
@@ -88,14 +56,12 @@ $CAPACITE_DEFAUT = 2000;
             <h2 class="mb-0 "><i class="bi bi-building me-2"></i> Gestion des Magasins</h2>
             <p class="text-muted small">Gestion des stocks et inventaire par entrepôt</p>
         </div>
-         <?php if(/*isset($role) &&*/ $role == 'admin'): 
-            /*px-4 py-2--> kenet em3a button aajoute hya tet7akm fi el3are4 ou doul button*/?>
+         <?php if( $role == 'admin'): ?>
         <a href="ajout_magasin.php" class="btn btn-primary   ">
             <i class="bi bi-plus-lg "></i> Ajouter Magasin
         </a>
               <?php endif; ?>
     </div>
-
     <div class="search-container  ">
         <form method="GET">
             <div class="input-group">
@@ -118,22 +84,14 @@ $CAPACITE_DEFAUT = 2000;
             </div>
         <?php else: ?>
             <?php foreach($magasins as $m): 
-              // حساب نسبة الامتلاء
                 $usage_percent = ($m['total_qte'] / $CAPACITE_DEFAUT) * 100;
-                //a7mer ken quantite akther m'en 85%
                if ($usage_percent > 85) {
                $bar_color = 'bg-danger';
-              // asfer ken ben 50ù ou 85%
                 } elseif ($usage_percent > 50) {
                 $bar_color = 'bg-warning';
                 } else {
-                    //OU akh4er ken a9el m'en 50%
                 $bar_color = 'bg-success';
-                }
-            
-
-
-            ?>    
+                }?>    
                 <div class="col-4">
                     <div class="user-card ">
                         
@@ -149,15 +107,8 @@ $CAPACITE_DEFAUT = 2000;
                                 <span class="small text-muted fw-bold">Utilisation</span>
                                 <span class="fw-bold small text-dark"><?=($m['total_qte']) ?> / <?= $CAPACITE_DEFAUT ?></span>
                             </div>
-            <!-- classe =progress hya emta3 eltoura emi et7out feha partie eli mousta3mla b'en alwan / bar_color howa style css eli bech uakhtjou elcontitue eli fi magasin
-             progress :hya bootstrap eli ta3mel eli eitar / progress-bar hya bootstrap bartie l'emlawen eli eiwari enesba -->
-             
                             <div class="progress" style="height: 10px; background-color: #f0f2f5; border-radius: 10px;">
-                                <div class="progress-bar <?= $bar_color ?> rounded-pill" 
-                                    
-                                    
-                                        style="width: <?= min($usage_percent, 100) ?>%"><?/** width emta3 elpartie elemlawna eli ta3tik 9etech pourcentage eliesta3maltha haKA ken  et3abet akther m'en capacite emtaèa etwali takhou 100% widh emta7
-                                      * 3alakhater eiwali ken mat7outech ou etfout eiwali yatla3 m'en cadre emta3 magasin   */?> </div>
+                                <div class="progress-bar <?= $bar_color ?> rounded-pill" style="width: <?= min($usage_percent, 100) ?>%"><??> </div>
                             </div>
                         </div>
 
@@ -168,10 +119,7 @@ $CAPACITE_DEFAUT = 2000;
                                     <small class="text-primary fw-bold">nb peripherique </small>
                                 </div>
                             </div>
-                            <!-- border hya eli ta3mel carde emta3 w
-                             en tou4her kelmet total QTE MP-3 hya toul carde- rounted bootstrab  7aja tab3 designe emta3carde border hya eli ta3mel  cadre ou shasaw hya em3a border ta3melcarde -->
                             <div class="col-6">
-                                <!--shadow-sm-->
                                 <div class="border rounded p-3 text-center bg-white ">
                                     <h3 class="fw-bold mb-0 text-dark"><?= $m['total_qte'] ?></h3>
                                     <small class="text-primary fw-bold">Total Qte</small>
@@ -181,7 +129,6 @@ $CAPACITE_DEFAUT = 2000;
 
                         <div class="mb-4">
                             <label class="fw-bold text-muted small mb-2 text-uppercase">Contenu recent :</label>
-                            <!--border-start :ta3mel khat fi jnab leysar /border-4 kouber elkhat /border-primary loul elkhat  -->
                             <div class="bg-light rounded p-3 border-start border-4 border-primary ">
                                 <?php if(empty($m['list_articles'])): ?>
                                     <div class="text-muted small text-center italic">Aucun article actif</div>
@@ -195,11 +142,8 @@ $CAPACITE_DEFAUT = 2000;
                                 <?php endif; ?>
                             </div>
                         </div>
-                                        <!-- mt-auto enkhalaha 3alakhater ta3ti margi auto bech eikounou boutton elkol faret ersti9ama -->
                         <div class="d-flex gap-2 mt-auto pt-3">
-                               <?php if( $role == 'admin'): 
-                                //  onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce magasin ?')"> ha4i bech ki ten
-                                // ten zel 3ala button suprimer tatna3lek alert eli feha msg eli fi confirm ou oui ou non  ?>
+                               <?php if( $role == 'admin'): ?>
                             <a href="modifier_magasin.php?id=<?= $m['id_magasin'] ?>" 
                                class="btn btn-outline-primary flex-grow-1 ">
                                <i class="bi bi-pencil-square me-1"></i> Modifier
@@ -226,9 +170,6 @@ $CAPACITE_DEFAUT = 2000;
         <?php elseif ($_GET['msg'] == 'deleted'): ?>
             alert("Magasin supprimé avec succès.");
         <?php endif; ?>
-        
-        // تنظيف الرابط (URL) باش الميساج ما يقعدش يظهر كل ما تعمل Refresh
-       
     </script>
 <?php endif; ?>
 

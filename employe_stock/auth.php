@@ -1,14 +1,9 @@
 <?php
-
 session_start();
-
-// bech ychouf ken l'utilisateur mawjoud wele lee fel session
 if (!isset($_SESSION['id_utilisateur'])) {
-    header("Location:../../secerity/login.php");//ken mawjoud cv snn bech yeb3thou ya3mel login
+    header("Location:../../secerity/login.php");
     exit();
 }
-
-// Vérifier les rôles autorisés (bech ychouf 3andou role wela lee)
 function require_role(array $roles) 
 {
     $roles = array_map('strtolower', $roles);

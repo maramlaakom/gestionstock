@@ -1,27 +1,12 @@
-/* ===================== */
-/* NOTIFICATIONS ONLY */
-/* ===================== */
-
 .main-container {
     max-width: 900px;
     margin: 40px auto;
 }
-
-
-/*ha4i li header eli feha deux button 
-d-flex                     → display:flex
-justify-content-between    → يبعد العناصر على بعضهم (واحد يسار / واحد يمين)
-align-items-center         → يوسّط العناصر عمودياً (vertical center)
-mb-5                       → margin-bottom كبير (مسافة لتحت)
-*/
-.header{
-   
-    display: flex;                 /* d-flex */
-    justify-content: space-between;/* justify-content-between */
-    align-items: center;           /* align-items-center */
-    margin-bottom: 3rem;           /* mb-5 ≈ 3rem */
-
-
+.header{  
+    display: flex;             
+    justify-content: space-between;
+    align-items: center;         
+    margin-bottom: 3rem;           
 }
 .header h2{
     border:none; 
@@ -30,7 +15,6 @@ mb-5                       → margin-bottom كبير (مسافة لتحت)
     margin-bottom: 0.5rem;
     font-weight: bold;
 }
-/*ha4i style li card ki tabda ejtita */
 .notif-no-lu {
     background: #d5e9ff;
     border-left: 5px solid var(--primary);
@@ -39,16 +23,7 @@ mb-5                       → margin-bottom كبير (مسافة لتحت)
     margin-bottom: 15px;
     display: flex;
     align-items: center;
-   /* transition: .3s;
-   /* box-shadow: 0 4px 12px rgba(0,0,0,.03);*/
 }
-
-/*.no-lu:hover {
-    /* background:var( --secondary);*//*
-     transform: translateY(-5px);
-    box-shadow: 0 0 0 .25rem rgba(73, 149, 224, 0.3);
-}*/
-/* Card notification  ha4i style li card eli ma9roua*/
 .notif-card {
     background: white;
     border-radius: 16px;
@@ -56,74 +31,52 @@ mb-5                       → margin-bottom كبير (مسافة لتحت)
     margin-bottom: 15px;
     display: flex;
     align-items: center;
-   /* transition: .3s;
-   /* box-shadow: 0 4px 12px rgba(0,0,0,.03);*/
 }
-
-/*.notif-card:hover {
-    /* background:var( --secondary);*//*
-     transform: translateY(-5px);
-    box-shadow: 0 0 0 .25rem rgba(73, 149, 224, 0.3);
-}
-*/
-
-/* divider */
 .section-divider {
     margin-top: 0;
     height: 1px;
     background-color: #e5e5e5;
 }
-
-/* card ki yabfda mafama 7ata notification awel mata3mel compte  */
 .no-notif {
-    border: none;                         /* border-0 */
-    border-radius: 1rem;                  /* rounded-4 */
-    padding: 3rem;                        /* p-5 */
-    text-align: center;                   /* text-center */
-    background: var(--secondary);         /* background */
-    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075); /* shadow-sm */
+    border: none;                         
+    border-radius: 1rem;                 
+    padding: 3rem;                        
+    text-align: center;                   
+    background: var(--secondary);         
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075); 
 }
-
-/* icon */
 .no-notif i  {
-    font-size: 3rem;      /* display-1 تقريب */
-    color: #f8f9fa;       /* text-light */
-    margin-bottom: 1rem;  /* mb-3 */
+    font-size: 3rem;     
+    color: #f8f9fa;    
+    margin-bottom: 1rem;  
 }
-
-
-
-
 .bouton {
-    display: inline-flex;                     /* display:inline-flex */
-    align-items: center;                      /* align-items:center */
-    justify-content: center;                  /* يخلي النص في الوسط */
+    display: inline-flex;                   
+    align-items: center;                     
+    justify-content: center;                  
 
-    height: 32px;                             /* style inline */
+    height: 32px;                           
 
-    padding: 0 1rem;                          /* px-3 */
-    font-size: 0.875rem;                      /* btn-sm */
+    padding: 0 1rem;                          
+    font-size: 0.875rem;                     
 
-    background-color:var(--bg);                   /* btn-white */
-    color: #212529;                           /* لون النص */
+    background-color:var(--bg);                
+    color: #212529;                     
 
-    border: 1px solid #dee2e6;                /* border */
-    border-radius: 50rem;                     /* rounded-pill */
+    border: 1px solid #dee2e6;         
+    border-radius: 50rem;                    
 
-    text-decoration: none;                    /* ينحي underline */
+    text-decoration: none;                 
 
-    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); /* shadow-sm */
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); 
 
     cursor: pointer;
     transition: 0.2s;
 }
 
 .bouton:hover {
-    background-color:var( --secondary);               /* hover خفيف */
+    background-color:var( --secondary);       
 }
-
-
-/* Icon */
 .icon-circle {
     width: 50px;
     height: 50px;
@@ -149,8 +102,6 @@ mb-5                       → margin-bottom كبير (مسافة لتحت)
     background: var(--secondary)!important;
     color: var( --bg);
 }
-
-/* Content */
 .notif-content h6 {
     margin: 0 0 5px;
     font-weight: bold;
@@ -158,8 +109,8 @@ mb-5                       → margin-bottom كبير (مسافة لتحت)
 .notif-content p{
      font-size: 0.9rem;
     line-height: 1.4;
-    color: #000;       /* text-dark */
-    margin-bottom: 0.5rem;  /* mb-2 ≈ 0.5rem */
+    color: #000;      
+    margin-bottom: 0.5rem;  
 }
 
 .notif-time {

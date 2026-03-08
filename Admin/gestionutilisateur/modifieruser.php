@@ -2,13 +2,11 @@
 require_once __DIR__ . '/../../includes/connexion.php';
 require_once '../../employe_stock/auth.php';
 require_role(["Admin"]);
-// variabe $id = id envoyer avec lien  "modifieruser.php?id=<?= $u['id_utilisateur'] "
 if (!isset($_GET['id'])) {
     header("location:listeutilisateur.php");
     exit;
 }
 $id = $_GET['id'];
-//select donner de user de id emta3ou eli fi BD =$id
 $stmt = $pdo->prepare("SELECT * FROM utilisateur WHERE id_utilisateur=?");
 $stmt->execute([$id]);
 $user = $stmt->fetch();
@@ -19,16 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         SET nom=?, prenom=?, email=?, role=?, etat_compte=?
         WHERE id_utilisateur=?
     ");
-    if (  $stmt->execute([
-        $_POST['nom'],
-        $_POST['prenom'],
-        $_POST['email'],
-        $_POST['role'],
-        $_POST['etat_compte'],
-        $id
-    ])) {
+    if (  $stmt->execute([ $_POST['nom'],$_POST['prenom'],$_POST['email'],$_POST['role'],$_POST['etat_compte'], $id])) {
     header("Location:  listeutilisateur.php");
-    //exit;
+    exit;
     }
 }?>
 <!DOCTYPE html>
@@ -48,8 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="page-form"> 
     <div class="form-container"> 
    <h2>   <i class="bi bi-pencil-square"></i> Modifier utilisateur</h2> 
-        
-<!--  autocomplete="off ha4i kanet fi form -->
         <form method="POST"> 
             <div class="row  g-3 ">
                 <div class="col-6">

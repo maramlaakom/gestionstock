@@ -5,17 +5,8 @@
 require_once '../../includes/connexion.php';
 require_once '../../employe_stock/auth.php';
 require_role(["Admin" ,"employe_stock"]);
-//if (isset($_SESSION['role'])) {
     $role = $_SESSION['role'];
-//} else {
-  //  $role = '';
-//}
-
-
-// utilisateur connecté (exemple)
    $id_user = $_SESSION['id_utilisateur'];
-
-// charger articles
 $articles = $pdo->query("SELECT id_article, nom_article, modele, quantite FROM article WHERE etat = 'actif'AND quantite > 0")->fetchAll();
 
 $success_message = '';
@@ -27,10 +18,7 @@ if (isset($_POST['entree'])) {
 
    
         try {
-            // transaction
             $pdo->beginTransaction();
-
-            // récupérer article
             $stmt = $pdo->prepare("SELECT quantite, id_magasin FROM article WHERE id_article = ?");
             $stmt->execute([$id_article]);
             $article = $stmt->fetch();
@@ -39,13 +27,9 @@ if (isset($_POST['entree'])) {
             if (!$article) {
     throw new Exception("Article introuvable");
 }
-
-            // mise à jour stock
             $new_qte = $article['quantite'] + $qte;
             $stmt = $pdo->prepare("UPDATE article SET quantite = ? WHERE id_article = ?");
             $stmt->execute([$new_qte, $id_article]);
-
-            // historique
             $stmt = $pdo->prepare("
                 INSERT INTO historique_movement
                 (id_article, type_mouvement, quantite, id_utilisateur, id_magasin_dst, date_mouvement)
@@ -57,8 +41,6 @@ if (isset($_POST['entree'])) {
                 $id_user,
                 $article['id_magasin']
             ]);
-
-            // confirmation
             $pdo->commit();
             $success_message = "Entrée stock réussie";
 

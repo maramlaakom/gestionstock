@@ -3,50 +3,35 @@ require_once '../../includes/connexion.php';
 require_once '../../employe_stock/auth.php';
 require_role(["Admin"]);
 $id_user = $_SESSION['id_utilisateur'];
-
+$nom_user = $_SESSION['nom'] ;
+$prenom_user = $_SESSION['prenom'];
 $errors = [];
 $success = "";
-
-// Récupérer les magasins
 $magasins = $pdo->query("SELECT * FROM magasin")->fetchAll();
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {// = if (isset($_POST['name button engistrer  ']))
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom_article = trim($_POST['nom_article']);
     $modele      = trim($_POST['modele']);
-    $sn   = trim($_POST['numero_serie']);
-   // $quantite    = intval($_POST['quantite']);
     $cout  = floatval($_POST['prix']);
     $id_magasin  = intval($_POST['id_magasin']);
-
-    // Validation
-    if (!$nom_article || !$modele || !$sn  || $cout < 0 || $id_magasin <= 0) {
+    if (!$nom_article || !$modele || $cout < 0 || $id_magasin <= 0) {
         $errors[] = "Tous les champs sont obligatoires et doivent avoir des valeurs valides.";
     }
-
     if (empty($errors)) { 
         try {
             $pdo->beginTransaction();
-
-            // Inserer l'article
             $sql = "INSERT INTO article 
-                    (nom_article, modele, numero_serie, quantite, cout, id_magasin) 
-                    VALUES (?, ?, ?, ?, ?, ?)";
+                    (nom_article, modele, quantite, cout, id_magasin) 
+                    VALUES (?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$nom_article, $modele, $sn, 1, $cout, $id_magasin]);
-
-            // Recuperer dernier ID haki etjib akher id takhaltou ela bd akher id article  
+            $stmt->execute([$nom_article, $modele, 1, $cout, $id_magasin]);
             $last_id = $pdo->lastInsertId();
-
-            // Ajouter dans historique_movement
             $sql_hist = "INSERT INTO historique_movement 
                          (id_article, type_mouvement, quantite, id_utilisateur, id_magasin_dst, commentaire)
                          VALUES (?, 'entree', ?, ?, ?, ?)";
             $stmt_hist = $pdo->prepare($sql_hist);
-            $stmt_hist->execute([$last_id, 1, $id_user, $id_magasin, "Nouvel article ajoute"]);
-
+            $stmt_hist->execute([$last_id, 1, $id_user, $id_magasin, "Nouvel article ajoute". $nom_user ." " .$prenom_user]);
             $pdo->commit();
             $success = "Article ajouté et mouvement enregistré avec succès !";
-
         } catch (Exception $e) {
             $pdo->rollBack();
             $errors[] = "Erreur lors de l'ajout : " . $e->getMessage();
@@ -54,8 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {// = if (isset($_POST['name button e
     }
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -78,35 +61,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {// = if (isset($_POST['name button e
         <?php endif; ?>
 
         <?php if ($success): ?>
-            <div class="alert alert-success"><?=/* htmlspecialchars*/$success ?></div>
+            <div class="alert alert-success"><?=$success ?></div>
         <?php endif; ?>
 
         <form method="POST">
             <div class="mb-3">
-                <label class="form-label">Nom de l'article <!--<span class="required-star">*</span>--></label>
+                <label class="form-label">Nom de l'article <span class="required-star">*</span></label>
                 <input type="text" name="nom_article" class="form-control" 
                        placeholder="donner le nom Imprimante " required>
-        <!-- required ha4i bech ki tenzel 3ala button ou yabta mahouch em3amer yatna3 blaka eskhira feha veuiilez ....-->
-            </div>
-            
+            </div>           
             <div class="mb-3">
-                <label class="form-label">Modele</label>
+                <label class="form-label">Modele <span class="required-star">*</span></label>
                 <input type="text" name="modele" class="form-control" 
                        placeholder=" type article ">
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">Numero de serie</label>
-                <input type="text" name="numero_serie" class="form-control" 
-                       placeholder="numero serie"> 
-            </div>
-            
+            </div>            
             <div class="mb-3">
                 <label class="form-label">Magasin <span class="required-star">*</span></label>
                 <select name="id_magasin" class="form-select" required>
                     <option value="">-- Choisir magasin --</option>
                     <?php foreach ($magasins as $m): ?>
-                    <!--id ma7atethach htmlspecialchar 3alakhater number ou nom char -->
                         <option value="<?= $m['id_magasin'] ?>">
                             <?= htmlspecialchars($m['nom_magasin']) ?>
                         </option>
@@ -117,16 +90,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {// = if (isset($_POST['name button e
                <div class="mb-4">
                    <label class="form-label">Prix unitaire (DT) <span class="required-star">*</span></label>
                     <input type="number" step="0.01" name="prix" class="form-control" min="0"    placeholder="000"  required>
-                </div>
-                
-               
-           
-            
+                </div>    
             <div class="row g-3 mt-3">
                 <div class="col-6">
                     <button type="submit" class="btn btn-primary w-100">Enregistrer</button>
                 </div>
-                  <!-- ha4ouma kanou em3a button annuler d-flex align-items-center justify-content-center" style="height: 48px; text-decoration: none; -->
                 <div class="col-6">
                     <a href="gestionarticle.php" class="btn btn-secondary w-100 ">Annuler</a>
                 </div>

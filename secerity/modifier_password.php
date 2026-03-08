@@ -1,8 +1,6 @@
 <?php
 session_start();
-require_once '../includes/connexion.php';
-
-// condition pour ouvrire le page modifier 
+require_once '../includes/connexion.php'; 
 if (!isset($_SESSION['autorise_reset']) || $_SESSION['autorise_reset'] !== true) {
     header("Location: password_oublie.php");
     exit;
@@ -14,8 +12,6 @@ $success = "";
 if (isset($_POST['modifier'])) {
     $p1 = $_POST['mot_de_passe'];
     $p2 = $_POST['confirm_password'];
-    
-    // stock email  derniere user entrer (eli fi session ) dans variable  $email
     $email = $_SESSION['email_reset']; 
 
     if ($p1 === $p2) {
@@ -53,10 +49,7 @@ if (isset($_POST['modifier'])) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
        <link rel="stylesheet" href="../css/base.css">
      <link rel="stylesheet" href="../css/forms.css">
-    <style>
-      /*  body { background-color: #7f8c8d; }
-        .card-reset { width: 450px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: none; }*/
-    </style>
+      
 </head>
 
 

@@ -2,25 +2,7 @@
 require_once '../includes/connexion.php';
 require_once "auth.php";
 require_role(["employe_stock"]);
-
-/*if (!isset($_SESSION['id_utilisateur'])) {
-    header("Location: ../secerity/login.php");
-    exit();
-}*/
-/*
-// ... داخل جزء إرسال الرسالة ...
-if (isset($_POST['envoyer']) && !empty(trim($_POST['txt_message']))) {
-    $msg = htmlspecialchars($_POST['txt_message']);
-    // id_utilisateur = 13 (صاحب المحادثة) | id_expediteur = 13 (المرسل)
-    $insert = $pdo->prepare("INSERT INTO message (id_utilisateur, id_expediteur, contenu, type) VALUES (?, ?, ?, 'utilisateur')");
-    $insert->execute([$id_user, $id_user, $msg]);
-    // ... بقية الكود (إرسال التنبيهات للآدمن) كما هو ...
-}
-*/
-
 $id_user = $_SESSION['id_utilisateur'];
-//id_utilisateur ht=ya emta3 employe 
-// معالجة إرسال الرسالة
 if (isset($_POST['repondre']) && !empty(trim($_POST['txt_message']))) {
     $msg = htmlspecialchars($_POST['txt_message']);
     $insert = $pdo->prepare("INSERT INTO message (id_utilisateur, contenu, type) VALUES (?, ?, 'utilisateur')");
@@ -36,18 +18,11 @@ if (isset($_POST['repondre']) && !empty(trim($_POST['txt_message']))) {
         $nom_sender = '';
         }     
         $notif_txt = "Nouveau message de " . $nom_sender;
-        // ha4i etjib eli 3anthoum  role admin elkol ou etour 3alihoum elkol bech taba34enhoum no
-        //notification admin elkol touslelhoum notification nafes contenu ama mich nafes id_notification
-        //enti prepar(ma3naha et7a4er estar ek=li bech etzitou ou ba3et fi execute et3awe4 ? bi 9yam emta7a ) notification   mara wa7ta ama exexute ma3naha etakhalha lel bd 3ala 3ated admin haK 3alah id emta3 n
-        //notification kol mara tetebatel 3alakhater kol ma EXECUTE etsir execute bi id moukhtalfa
         $insNotif = $pdo->prepare("INSERT INTO notification (id_utilisateur, contenu, etat) VALUES (?, ?, 'non_lu')");
         foreach ($admins as $admin) {
             $insNotif->execute([$admin['id_utilisateur'], $notif_txt]);
         }
     }
-    //bech kol mateb3e4 msg e
-    //header("Location: mesangerie.php"); 
-    //exit();
 }
 
 $query = $pdo->prepare("SELECT * FROM message WHERE id_utilisateur = ? ORDER BY date_message ASC");
@@ -74,7 +49,7 @@ $messages = $query->fetchAll();
 <body class="page-form">
 
 <div class="container py-4">  
-<!--gap-3-->
+
     <div class="page-messanger " style="max-width: 850px; ">
         
         <div class="messenger-header">
@@ -88,10 +63,7 @@ $messages = $query->fetchAll();
                            <small class="text-muted small">Chat en direct</small>
                     </div>
                 </div>
-                
-              
                     <div>
-                <!-- border: ha4a eli ya3mel cadre eteiri /border-primary-subtle: hya bech etbatel cadre azre9 / rounded-pill bech ta3tih fourmet toura -->
  <a class="badge  lien" href="?">refrechi</a>
 
   <a href="index.php" class=" badge lien">Retour</a>
@@ -102,9 +74,7 @@ $messages = $query->fetchAll();
         
             
         </div>
-<!-- ha4a chatbox  eli you4eshrou fih messaget elkol -->
-
-          <section class="chat-area">
+        <section class="chat-area">
           <div class="chat-messages " id="chatBox" style="height:480px" > 
            
                 <?php foreach($messages as $m): ?>
@@ -134,7 +104,6 @@ $messages = $query->fetchAll();
 </div>
 
 <script>
-    //bech etjib div eli fih  id = chatbox
     var objDiv = document.getElementById("chatBox");
     if(objDiv) objDiv.scrollTop = objDiv.scrollHeight;
 </script>

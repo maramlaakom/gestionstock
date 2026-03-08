@@ -19,14 +19,9 @@ $stmt->execute([$id]);
 $art = $stmt->fetch();
 
 if ($art) {
-    /*hne esta3malt try/catch bech ken saret mouchekla toul tahbet le catch ou traje3donner kima kalet lena histori
-    historique marbout bi uptate article ken matbetelech etat lazem maiet9aiet chay fi mouvement */
     try {
         $pdo->beginTransaction();
         $com= "Suppression definitive par  " . $nom_user ." " .$prenom_user;
-
-         //  takhou les donner des article avant suppresion lana lazem et7outha e9bal suprimer akher 7aja  bech  et9aiet 
-         //donner emta3 article eli bech etfaskhou 
         $sql_hist = "
             INSERT INTO historique_movement 
             (id_article, type_mouvement, quantite, id_utilisateur, id_magasin_src, commentaire)
@@ -40,13 +35,7 @@ if ($art) {
             $art['id_magasin'],
             $com
         ]);
-
-        //haki ki telzel 3ala suprimer eiwali quantite =0 ou eta suprimer 
-        $sql_update = "
-            UPDATE article 
-            SET etat = 'supprime', quantite = 0 
-            WHERE id_article = ?
-        ";
+        $sql_update = "UPDATE article SET etat = 'supprime', quantite = 0 WHERE id_article = ?";
         $stmt_update = $pdo->prepare($sql_update);
         $stmt_update->execute([$id]);
 
