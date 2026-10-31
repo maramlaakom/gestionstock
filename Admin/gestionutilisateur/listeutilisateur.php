@@ -31,7 +31,8 @@ $users = $stmt->fetchAll();
 
     
     <link rel="stylesheet" href="../../css/base.css">
-    <link rel="stylesheet" href="../../css/cards.css"> </head>
+    <link rel="stylesheet" href="../../css/cards.css"> 
+</head>
 
 
 
@@ -59,8 +60,8 @@ $users = $stmt->fetchAll();
         </a>
     </div>
 
-    <div class="search-container shadow-sm">
-        <form method="GET">
+    <div class="search-container ">
+        <form method="GET" >
             <div class="input-group">
                 <input type="text" name="search" class="form-control p-3" placeholder="Rechercher...">
                 <button class="btn btn-primary px-4"><i class="bi bi-search"></i></button>
@@ -73,7 +74,7 @@ $users = $stmt->fetchAll();
         <div class="col-12">
             <div class="no-results shadow-sm">
                 <i class="bi bi-person-x" style="font-size: 4rem; color: var(--secondary);"></i>
-                <h4 class="mt-3 fw-bold" style="color: var(--primary);">Aucun utilisateur trouvé</h4>
+                <h4 class="mt-3 fw-bold" style="color: var(--primary);">Aucun utilisateur trouve</h4>
                 <p class="text-muted">Essayez une autre recherche ou ajoutez un nouvel utilisateur</p>
             </div>
         </div>
@@ -100,7 +101,7 @@ $users = $stmt->fetchAll();
                         <label class="text-muted small d-block mb-1 fw-bold">Permissions</label>
                         <span class="small text-dark">
                             <?php 
-                                if($u['role'] == 'Admin') echo "Tous les accès";
+                                if($u['role'] == 'Admin') echo "Tous les acces";
                                 elseif($u['role'] == 'employe_stock') echo "Sorties, entres, Transferts, Consultation";
                             ?>
                         </span>

@@ -1,5 +1,4 @@
 
-
 <?php
 require_once '../includes/connexion.php';
 require_once "auth.php";
@@ -8,12 +7,12 @@ require_role(["employe_stock"]);
 $msg = "";
 $error = "";
     $id_user = $_SESSION['id_utilisateur'];
-if (isset($_POST['envoyer_demande'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST')  {
     $id_art = $_POST['id_article'];
     $type = $_POST['type_action'];
     $qte = $_POST['quantite'];
     $id_magasin_dest = ($type === 'transfert') ? $_POST['magasin_dest'] : null;
-    $stmt = $pdo->prepare("SELECT a.nom_article, m.nom_magasin, m.id_magasin FROM article a 
+    $stmt = $pdo->prepare("SELECT a.*, m.* FROM article a 
                            JOIN magasin m ON a.id_magasin = m.id_magasin 
                            WHERE a.id_article = ?");
     $stmt->execute([$id_art]);
@@ -31,31 +30,41 @@ if (isset($_POST['envoyer_demande'])) {
 
     $magasin_source_nom = $art['nom_magasin'];
     $id_magasin_source = $art['id_magasin'];
+    if ($art['quantite'] < $qte) {
+    $error = "Erreur : La quantité disponible est insuffisante !";
+}
+else {
     if ($type === 'transfert' && intval($id_magasin_source) === intval($id_magasin_dest)) {
         $error = "Erreur : Le magasin de destination doit être différent du magasin actuel ($magasin_source_nom) !";
     } else {
-        $nom_complet = ($user['prenom'] ?? '') . ' ' . ($user['nom'] ?? '');
-        $message = "DEMANDE_ACCES | Employé: {$nom_complet} | Art: {$art['nom_article']} | Qty: {$qte} | Type: {$type} | From: {$magasin_source_nom} | To: {$nom_mag_dest}";
+        $nom_complet = ($user['prenom'] ) . ' ' . ($user['nom'] );
+        $message = "DEMANDE_ACCES | Employe: {$nom_complet} | Art: {$art['nom_article']} | Qty: {$qte} | Type: {$type} | From: {$magasin_source_nom} | To: {$nom_mag_dest}";
         $ins = $pdo->prepare("INSERT INTO demande_contact 
-            (id_utilisateur, id_article, id_magasin_dest, qte_demande, sujet, message, date_demande, statut) 
-            VALUES (?, ?, ?, ?, 'DEMANDE PERMISSION', ?, NOW(), 'en_attente')");
+            (id_utilisateur, id_article, id_magasin_dest, qte_demande, message, date_demande, statut) 
+            VALUES (?, ?, ?, ?,  ?, NOW(), 'en_attente')");
         
         if ($ins->execute([$id_user, $id_art, $id_magasin_dest, $qte, $message])) {
-            $msg = "Demande envoyée avec succès !";
+            $msg = "Demande envoyee avec succes !";
             $stmtAdmin = $pdo->query("SELECT id_utilisateur FROM utilisateur WHERE role = 'Admin'");
             $admins = $stmtAdmin->fetchAll();
 
             if ($admins) {
-                $notif_text = "Nouvelle demande ($type) de la part de $nom_complet $message";
-                $insNotif = $pdo->prepare("INSERT INTO notification (id_utilisateur, contenu, etat) VALUES (?, ?, 'non_lu')");
+              
+                $insNotif = $pdo->prepare("INSERT INTO notification ( contenu, etat,date_notification) VALUES (?,  'non_lu' ,NOW())");
+                $insNotif->execute([$message]);
+                 $id_notification = $pdo->lastInsertId();
+                  $insLien = $pdo->prepare("INSERT INTO notification_utilisateur (id_notification, id_utilisateur) VALUES (?, ?)");
                 foreach ($admins as $admin) {
-                    $insNotif->execute([$admin['id_utilisateur'], $notif_text]);
+                    $insLien->execute([$id_notification, $admin['id_utilisateur']]);
                 }
             }
+
+
         }
     }
 }
-$articles = $pdo->query("SELECT a.*, m.nom_magasin FROM article a JOIN magasin m ON a.id_magasin = m.id_magasin WHERE a.etat = 'actif'AND quantite > 0")->fetchAll();
+}
+$articles = $pdo->query("SELECT a.*, m.* FROM article a JOIN magasin m ON a.id_magasin = m.id_magasin WHERE quantite > 0")->fetchAll();
 $magasins = $pdo->query("SELECT * FROM magasin")->fetchAll();
 
 ?>
@@ -82,11 +91,11 @@ $magasins = $pdo->query("SELECT * FROM magasin")->fetchAll();
 
         <form method="POST">
             <div class="mb-4">
-                <label class="form-label">Article Sélectionné</label>
+                <label class="form-label">Article Selectionné</label>
                 <select name="id_article" class="form-select" required>
                     <?php foreach($articles as $a): ?>
                         <option value="<?= $a['id_article'] ?>">
-                            <?= $a['nom_article'] ?> (Stock: <?= $a['quantite'] ?>) — [<?= $a['nom_magasin'] ?>]
+                            <?= $a['nom_article'] ?> (quantite: <?= $a['quantite'] ?>) ( nom magasin_src :<?= $a['nom_magasin'] ?>  adress: <?= $a['adresse'] ?>)
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -94,15 +103,15 @@ $magasins = $pdo->query("SELECT * FROM magasin")->fetchAll();
 
             <div class="row">
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">Type d'Opération</label>
+                    <label class="form-label">Type d'Operation</label>
                     <select name="type_action" id="type_action" class="form-select" onchange="toggleMagasin()" required>
-                        <option value="sortie">Sortie simple</option>
+                        <option value="sortie">Sortie de stock </option>
                         <option value="transfert">Transfert de stock</option>
                     </select>
                 </div>
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">Quantité Prévue</label>
-                    <input type="number" name="quantite" class="form-control" min="1" placeholder="Ex: 10" required>
+                    <label class="form-label">Quantite </label>
+                    <input type="number" name="quantite" class="form-control" min="1" placeholder="0000" required>
                 </div>
             </div>
 
@@ -110,7 +119,7 @@ $magasins = $pdo->query("SELECT * FROM magasin")->fetchAll();
                 <label class="form-label text-primary">Magasin de Destination</label>
                 <select name="magasin_dest" class="form-select " >
                     <?php foreach($magasins as $m): ?>
-                        <option value="<?= $m['id_magasin'] ?>"><?= $m['nom_magasin'] ?></option>
+                        <option value="<?= $m['id_magasin'] ?>"><?= $m['nom_magasin'] ?><?= $m['adresse'] ?> </option>
                     <?php endforeach; ?>
                 </select>
             </div>

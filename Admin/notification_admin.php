@@ -4,22 +4,24 @@ require_once '../employe_stock/auth.php';
 require_role(["Admin"]);
 $id_user = $_SESSION['id_utilisateur'];
 try {
-    $stmt = $pdo->prepare("
-        SELECT * 
-        FROM notification 
-        WHERE id_utilisateur = ? 
+    $stmt = $pdo->prepare(
+        "SELECT n.* 
+        FROM notification n
+        JOIN notification_utilisateur nu ON n.id_notification = nu.id_notification
+        WHERE nu.id_utilisateur = ?
         ORDER BY date_notification DESC 
         LIMIT 30
     ");
     $stmt->execute([$id_user]);
     $notifs = $stmt->fetchAll();
-    $update = $pdo->prepare("
-        UPDATE notification 
-        SET etat = 'lu' 
-        WHERE id_utilisateur = ? 
-        AND etat = 'non_lu'
-    ");
-    $update->execute([$id_user]);
+ $update = $pdo->prepare("
+    UPDATE notification n
+    JOIN notification_utilisateur nu ON n.id_notification = nu.id_notification
+    SET n.etat = 'lu'
+    WHERE nu.id_utilisateur = ? 
+    AND n.etat = 'non_lu'
+");
+$update->execute([$id_user]);
 
 } catch (PDOException $e) {
     die("Erreur : " . $e->getMessage());
@@ -43,7 +45,7 @@ try {
     
     <div> 
         <h2>Notifications</h2>
-        <p class="text-muted small">Gérez les alertes de stock et les messages reçus.</p>
+        <p class="text-muted small">GErez les alertes de stock  et le demande de mouvement</p>
     </div>
       <div class="row">
     <div class="d-flex gap-2 align-items-center">
@@ -69,8 +71,7 @@ try {
         <div>
 
             <?php foreach ($notifs as $n):
-                $is_stock = (stripos($n['contenu'], 'stock') !== false || stripos($n['contenu'], 'épuisé') !== false);
-               $is_msg   =  stripos($n['contenu'], 'message') !== false;
+                $is_stock = (stripos($n['contenu'], 'stock') !== false );
                 if ($n['etat'] === 'non_lu') {
                         $card_class = 'notif-no-lu';
                     } else {
@@ -82,11 +83,7 @@ try {
                     $bg   = "bg-stock";
                     $label = "Alerte Stock";
                 }             
-                elseif ($is_msg) {
-                    $icon = "bi-envelope-paper-fill";
-                    $bg   = "bg-msg";
-                    $label = "Nouveau Message";
-                } else {
+                 else {
                     $icon = "bi-info-circle-fill";
                     $bg   = "bg-info";
                     $label = "Information";

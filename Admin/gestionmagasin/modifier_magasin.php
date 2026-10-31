@@ -56,16 +56,13 @@ $magasin = $stmt->fetch();
                 <input type="text" name="adresse" class="form-control" 
                        value="<?= htmlspecialchars($magasin['adresse']) ?>" required>
             </div>
-            <div class="row g-3 mt-4"> 
-                <div class="col-6">
-                    <button type="submit" class="btn btn-primary w-100"> Mettre a jour</button>
-                </div>
-                <div class="col-6">
-                    <a href="gestionmagasins.php" class="btn btn-secondary w-100 ">
-                        Retour
+             <div class="d-flex gap-3">
+                  <button type="submit" class="btn btn-primary w-100">Mettre a jour </button>
+                    </button>
+                  <a href="gestionmagasins.php" class="btn btn-secondary w-100 ">
+                        Annuler
                     </a>
                 </div>
-            </div>
         </form>
 
 

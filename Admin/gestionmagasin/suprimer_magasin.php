@@ -7,7 +7,7 @@ if (!isset($_GET['id'])) {
     exit;
 }
 $id1 = $_GET['id'];
-$sql = "SELECT id_article FROM article WHERE id_magasin = ? AND etat = 'actif' AND quantite > 0";
+$sql = "SELECT id_article FROM article WHERE id_magasin = ?  AND quantite > 0";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$id1]);
 $articles = $stmt->fetchAll();

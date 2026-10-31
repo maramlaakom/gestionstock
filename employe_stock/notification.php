@@ -6,13 +6,23 @@ require_role([ "employe_stock"]);
 $id_user = $_SESSION['id_utilisateur'];
 
 try {
-    $stmt = $pdo->prepare("SELECT * FROM notification WHERE id_utilisateur = ? ORDER BY date_notification DESC LIMIT 30");
+       $stmt = $pdo->prepare("SELECT n.*  FROM notification n JOIN notification_utilisateur nu ON n.id_notification = nu.id_notification
+        WHERE nu.id_utilisateur = ?
+        ORDER BY date_notification DESC 
+        LIMIT 30
+    ");
     $stmt->execute([$id_user]);
-    $notifs = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $update = $pdo->prepare("UPDATE notification SET etat = 'lu' WHERE id_utilisateur = ? AND etat = 'non_lu'");
-    $update->execute([$id_user]);
+    $notifs = $stmt->fetchAll();
+$update = $pdo->prepare("
+    UPDATE notification n
+    JOIN notification_utilisateur nu ON n.id_notification = nu.id_notification
+    SET n.etat = 'lu'
+    WHERE nu.id_utilisateur = ? 
+    AND n.etat = 'non_lu'
+");
+$update->execute([$id_user]);
 
-} catch (PDOException $e) {
+} catch (Exception $e) {
     die("Erreur : " . $e->getMessage());
 }
 ?>
@@ -33,7 +43,7 @@ try {
     <div class="header">
         <div>
             <h2 >Notifications</h2>
-            <p class="text-muted small">Gérez les alertes de stock et les messages reçus.</p>
+            <p class="text-muted small">Gerez les  notification</p>
         </div>
         <div class="row">
     <div class="d-flex gap-2 align-items-center">
@@ -59,21 +69,16 @@ try {
     <?php else: ?>
         <div> 
             <?php foreach ($notifs as $n):
-                 $is_msg   =  stripos($n['contenu'], 'message') !== false;
                     if ($n['etat'] === 'non_lu') {
                         $card_class = 'notif-no-lu';
                     } else {
                         $card_class = 'notif-card';
                     }
-                if ($is_msg) {      
-                    $icon = "bi-envelope-paper-fill";
-                    $bg   = "bg-msg";
-                    $label = "Nouveau Message";
-                } else {
+             
                     $icon = "bi-info-circle-fill";
                     $bg   = "bg-info";
                     $label = "Information";
-                }
+                
             ?>
 
                 <div class="<?= $card_class ?>">

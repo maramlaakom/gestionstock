@@ -15,31 +15,27 @@ if (isset($_POST['accepter'])) {
     $stmt_upd->execute([$id_demande]);
 
     $msg_accepte = "OK_DEMANDE_" . $id_demande;
-    $stmt_notif = $pdo->prepare("INSERT INTO notification (id_utilisateur, contenu, date_notification) VALUES (?, ?, NOW())");
-    
-    if ($stmt_notif->execute([$id_user_target, $msg_accepte])) {
-        $msg = "<div class='alert alert-success'>Demande autorisée avec succès !</div>";
+    $stmt_notif = $pdo->prepare("INSERT INTO notification (contenu, date_notification) VALUES (?, NOW())");
+    if ($stmt_notif->execute([$msg_accepte])) {
+        $id_notification = $pdo->lastInsertId();
+        $notif_user= $pdo->prepare("INSERT INTO notification_utilisateur (id_notification, id_utilisateur) VALUES (?, ?)");
+        $notif_user->execute([$id_notification, $id_user_target]);
+        $msg = "<div  class='alert alert-success '>Demande accepter.</div>";
     }
 }
 if (isset($_POST['refuser'])) {
 
     $id_demande     = $_POST['id_demande'];
     $id_user_target = $_POST['id_user'];
-    $stmt_upd = $pdo->prepare(
-        "UPDATE demande_contact 
-         SET statut = 'refusee' 
-         WHERE id_demande = ?"
-    );
+    $stmt_upd = $pdo->prepare("UPDATE demande_contact SET statut = 'refusee' WHERE id_demande = ?");
     $stmt_upd->execute([$id_demande]);
     $msg_refus = "REFUS_DEMANDE_" . $id_demande;
-
-    $stmt_notif = $pdo->prepare(
-        "INSERT INTO notification (id_utilisateur, contenu, date_notification) 
-         VALUES (?, ?, NOW())"
-    );
-
-    if ($stmt_notif->execute([$id_user_target, $msg_refus])) {
-        $msg = "<div class='alert alert-danger'>Demande refusée.</div>";
+    $stmt_notif = $pdo->prepare("INSERT INTO notification (contenu, date_notification) VALUES (?, NOW())");
+    if ($stmt_notif->execute([$msg_refus])) {
+        $id_notification = $pdo->lastInsertId();
+        $notif_user= $pdo->prepare("INSERT INTO notification_utilisateur (id_notification, id_utilisateur) VALUES (?, ?)");
+        $notif_user->execute([$id_notification, $id_user_target]);
+        $msg = "<div class='alert alert-danger'>Demande refusee.</div>";
     }
 }
 $sql = "SELECT d.*, u.nom FROM demande_contact d 
@@ -83,12 +79,12 @@ $demandes = $pdo->query($sql)->fetchAll();
     </h2>
 
     <?= $msg ?>
-    <div class="table-responsive">
+    <div >
         <table class="table align-middle">
             <thead>
                 <tr>
-                    <th >Employé</th>
-                    <th >Détails de l'opération</th>
+                    <th >Employe</th>
+                    <th >Détails de l'operation</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -126,7 +122,7 @@ $demandes = $pdo->query($sql)->fetchAll();
                     <td colspan="3">
                         <div class="no-results">
                             <i class="bi bi-check2-all" style="font-size: 2rem;" ></i>
-                            <p >Tout est traité !  Aucune demande en attente.</p>
+                            <p >Tout est traite !  Aucune demande en attente.</p>
                         </div>
                     </td>
                 </tr>

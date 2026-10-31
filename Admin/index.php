@@ -8,18 +8,22 @@ $prenom_user = $_SESSION['prenom'];
 include 'alert_stock.php';
 
 try {
-    $unread_notif = $pdo->query("SELECT COUNT(*) FROM notification WHERE id_utilisateur = $id_user AND etat = 'non_lu'")->fetchColumn() ?: 0;
-    $total_art = $pdo->query("SELECT COUNT(*) FROM article WHERE etat = 'actif'")->fetchColumn() ?: 0;
-    $total_mag = $pdo->query("SELECT COUNT(*) FROM magasin")->fetchColumn() ?: 0;
-    $total_mvt = $pdo->query("SELECT COUNT(*) FROM historique_movement WHERE  MONTH(date_mouvement) = MONTH(CURRENT_DATE()) AND YEAR(date_mouvement) = YEAR(CURRENT_DATE())")->fetchColumn() ?: 0;
-    $nb_alert_stock = $pdo->query("SELECT COUNT(*) FROM article WHERE quantite <= 20  AND quantite > 0 AND etat = 'actif'")->fetchColumn() ?: 0;
-    
-    $alerts = $pdo->query("SELECT a.*, m.nom_magasin FROM article a LEFT JOIN magasin m ON a.id_magasin = m.id_magasin WHERE a.quantite <= 20  AND a.quantite > 0 AND a.etat = 'actif' LIMIT 10")->fetchAll(PDO::FETCH_ASSOC);
-    
+    $stmt_n = $pdo->query("SELECT n.id_notification FROM notification n
+        JOIN notification_utilisateur nu ON n.id_notification = nu.id_notification WHERE nu.id_utilisateur = $id_user AND n.etat = 'non_lu'");
+    $unread_notif = $stmt_n->rowCount();
+    $stmt_total_art = $pdo->query("SELECT id_article  FROM article WHERE quantite > 0 ");
+    $total_art = $stmt_total_art->rowcount();
+    $stmt_total_mag= $pdo->query("SELECT id_magasin  FROM magasin");
+    $total_mag = $stmt_total_mag->rowcount();
+    $stmt_total_mvt = $pdo->query("SELECT id_historique FROM historique_movement WHERE id_utilisateur = $id_user AND  MONTH(date_mouvement) = MONTH(CURRENT_DATE()) AND YEAR(date_mouvement) = YEAR(CURRENT_DATE())");
+    $total_mvt= $stmt_total_mvt->rowcount();
+    $stmt_nb_alert_stock = $pdo->query("SELECT id_article FROM article WHERE quantite < 20  AND quantite > 0");
+    $nb_alert_stock = $stmt_nb_alert_stock ->rowcount();
+    $alerts = $pdo->query("SELECT a.*, m.nom_magasin FROM article a  JOIN magasin m ON a.id_magasin = m.id_magasin WHERE a.quantite < 20  AND a.quantite > 0  LIMIT 10")->fetchAll();
     $stmt = $pdo->prepare("SELECT h.*, a.nom_article FROM historique_movement h JOIN article a ON h.id_article = a.id_article WHERE h.id_utilisateur = ? ORDER BY h.date_mouvement DESC LIMIT 5");
     $stmt->execute([$id_user]);
-    $movements = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e)
+    $movements = $stmt->fetchAll();
+} catch (Exception $e)
  { die("Erreur: " . $e->getMessage()); }
 ?>
 
@@ -82,7 +86,7 @@ try {
 
                 <h6 class="mb-0 fw-bold" style="color: #1b254b;"><?= htmlspecialchars($nom_user . ' ' . $prenom_user) ?></h6>
 
-                <small class="text-muted">Admin Stock</small>
+                <small class="text-muted">Admin </small>
             </div>
         </div>
         <div class="d-flex align-items-center gap-4">
@@ -106,7 +110,7 @@ try {
 
     <div class="stat-grid">
         <div class="stat-card">
-           <h6 class="text-muted small text-uppercase">Articles en Stock</h6>
+           <h6 class="text-muted small text-uppercase">Articles</h6>
                 <h3 class="fw-bold"><?=$total_art ?></h3>
         </div>
         

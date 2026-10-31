@@ -27,7 +27,7 @@ if (isset($_POST['modifier'])) {
                 $success = "Mot de passe modifie avec succes ! ";
                
                 session_destroy();
-                header("refresh:3;url=login.php");
+              header("Location: login.php");
             } else {
                 $error = "Aucun compte trouve pour cet e-mail ";
             }
@@ -72,9 +72,7 @@ if (isset($_POST['modifier'])) {
                 <label class="form-label">Nouveau mot de passe</label>
                 <div class="input-group">
                     <input type="password" name="mot_de_passe" id="p1" class="form-control" placeholder="Entrez votre mot de passe" required>
-                    <button class="btn btn-outline-secondary" type="button" onclick="togglePass('p1', 'eye1')">
-                        <i class="bi bi-eye" id="eye1"></i>
-                    </button>
+                    
                 </div>
             </div>
 
@@ -82,9 +80,7 @@ if (isset($_POST['modifier'])) {
                 <label class="form-label">Confirmer le mot de passe</label>
                 <div class="input-group">
                     <input type="password" name="confirm_password" id="p2" class="form-control" placeholder="Confirmez votre mot de passe" required>
-                    <button class="btn btn-outline-secondary" type="button" onclick="togglePass('p2', 'eye2')">
-                        <i class="bi bi-eye" id="eye2"></i>
-                    </button>
+                  
                 </div>
             </div>
 
@@ -93,18 +89,6 @@ if (isset($_POST['modifier'])) {
     <?php endif; ?>
 </div>
 
-<script>
-function togglePass(inputId, iconId) {
-    const input = document.getElementById(inputId);
-    const icon = document.getElementById(iconId);
-    if (input.type === "password") {
-        input.type = "text";
-        icon.classList.replace('bi-eye', 'bi-eye-slash');
-    } else {
-        input.type = "password";
-        icon.classList.replace('bi-eye-slash', 'bi-eye');
-    }
-}
-</script>
+
 </body>
 </html>

@@ -9,7 +9,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 $msg = ""; $error = "";
-
+   
 if (isset($_POST['submit'])) {
     $email = trim($_POST['email']);
     
@@ -27,7 +27,7 @@ if (isset($_POST['submit'])) {
             $mail->Host       = 'smtp.gmail.com';
             $mail->SMTPAuth   = true;
             $mail->Username   = 'maramlaakom2@gmail.com'; 
-            $mail->Password   = 'oxzd tezz euem uqcv';   
+            $mail->Password   = 'oxzd tezz euem uqcv';          
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port       = 587;
 
@@ -45,7 +45,7 @@ if (isset($_POST['submit'])) {
             $mail->addAddress($email);
             $mail->isHTML(true);
             $mail->Subject = 'Code de recuperation';
-            $mail->Body    = "Bonjour " . $user['nom'] . ",<br>Votre code de vérification est : <b>$code</b>";
+            $mail->Body    = "salut " . $user['nom'] . ",<br>Votre code de vérification est : <b>$code</b>";
 
             $mail->send();
             

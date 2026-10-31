@@ -6,14 +6,13 @@ $id_user = $_SESSION['id_utilisateur'];
 $error = "";
 $success = "";
 
-if (isset($_POST['modifier'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST')  {
 
     $nom    = trim($_POST['nom']);
     $prenom = trim($_POST['prenom']);
     $email  = trim($_POST['email']);
-
-    $old_pass = $_POST['old_password'] ?? '';
-    $new_pass = $_POST['new_password'] ?? '';
+     $old_pass = $_POST['old_password'];
+     $new_pass = $_POST['new_password'];
     $stmt_info = $pdo->prepare("
         UPDATE utilisateur 
         SET nom = ?, prenom = ?, email = ?
@@ -21,14 +20,14 @@ if (isset($_POST['modifier'])) {
     ");
     $stmt_info->execute([$nom, $prenom, $email, $id_user]);
 
-    $success = "Informations mises à jour.";
+    $success = "Informations mises a jour.";
     if (!empty($new_pass)) {
 
         $stmt_check = $pdo->prepare("SELECT mot_de_passe FROM utilisateur WHERE id_utilisateur = ?");
         $stmt_check->execute([$id_user]);
-        $current_hash = $stmt_check->fetchColumn();
+        $current_hash = $stmt_check->fetch();
 
-        if (password_verify($old_pass, $current_hash)) {
+        if (password_verify($old_pass, $current_hash['mot_de_passe'])) {
 
             $new_hash = password_hash($new_pass, PASSWORD_DEFAULT);
             $stmt_upd = $pdo->prepare("
@@ -38,7 +37,7 @@ if (isset($_POST['modifier'])) {
             ");
             $stmt_upd->execute([$new_hash, $id_user]);
 
-            $success .= " Mot de passe modifié avec succès.";
+            $success .= " Mot de passe modifie avec succes.";
 
         } else {
             $error = "L'ancien mot de passe est incorrect.";
@@ -46,13 +45,9 @@ if (isset($_POST['modifier'])) {
         }
     }
 }
-$user = $pdo->prepare("SELECT * FROM utilisateur WHERE id_utilisateur = ?");
-$user->execute([$id_user]);
-$u = $user->fetch();
-
-$user = $pdo->prepare("SELECT * FROM utilisateur WHERE id_utilisateur = ?");
-$user->execute([$id_user]);
-$u = $user->fetch();
+        $user = $pdo->prepare("SELECT * FROM utilisateur WHERE id_utilisateur = ?");
+        $user->execute([$id_user]);
+        $u = $user->fetch();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -96,7 +91,7 @@ $u = $user->fetch();
                         <input type="text" name="nom" class="form-control" value="<?= htmlspecialchars($u['nom']) ?>" required>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Prénom</label>
+                        <label class="form-label">Prenom</label>
                         <input type="text" name="prenom" class="form-control" value="<?= htmlspecialchars($u['prenom']) ?>" required>
                     </div>
                 </div>
@@ -108,15 +103,15 @@ $u = $user->fetch();
 
                 <div class="border-top pt-4 mb-4">
                     <p class=" mb-3" style="font-size: 1.5em; text-align:left;">
-                        <i class="bi bi-shield-lock me-1"></i> Sécurité
+                        <i class="bi bi-shield-lock me-1"></i> Securite
                     </p>
                     <div class="mb-3">
                         <label class="form-label text-danger">Ancien Mot de passe</label>
-                        <input type="password" name="old_password" class="form-control" placeholder="Obligatoire pour modifier" required>
+                        <input type="password" name="old_password" autocomplete="new-password" class="form-control" placeholder="............">
                     </div>
                     <div class="mb-0">
                         <label class="form-label text-success">Nouveau Mot de passe</label>
-                        <input type="password" name="new_password" class="form-control" placeholder="Laissez vide si inchangé"required>
+                        <input type="password" name="new_password" class="form-control" placeholder="......">
                     </div>
                 </div>
 

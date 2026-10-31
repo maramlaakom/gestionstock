@@ -4,23 +4,23 @@ require_once '../../employe_stock/auth.php';
 require_role(["Admin","employe_stock"]);
     $role = $_SESSION['role'];
     $id_user = $_SESSION['id_utilisateur'];
-if (strtolower($role )=== strtolower('employe_stock')){
-if (!isset($_GET['id'])) {
-    die("ID  manquant.");
+    if (strtolower($role )=== strtolower('employe_stock')){
+    if (!isset($_GET['id'])) {
+    die("ID demante manquant.");
 }
 $id_dem = intval($_GET['id']);
 }
-$articles = $pdo->query("SELECT id_article, nom_article, modele, quantite FROM article WHERE etat = 'actif' AND quantite >0 ")->fetchAll(PDO::FETCH_ASSOC);
+$articles = $pdo->query("SELECT id_article, nom_article, modele, quantite FROM article WHERE quantite >0 ")->fetchAll();
 $success_message = '';
 $error_message = '';
 
-if (isset($_POST['sortie'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_article = $_POST['id_article'];
-    $qte = intval ($_POST['quantite']);
+    $qte =  $_POST['quantite'];
         try {
             $pdo->beginTransaction();
             
-            $stmt = $pdo->prepare("SELECT nom_article, quantite, id_magasin FROM article WHERE id_article = ?");
+            $stmt = $pdo->prepare("SELECT a.quantite, m.nom_magasin FROM article a JOIN magasin m ON a.id_magasin = m.id_magasin WHERE a.id_article = ?");
             $stmt->execute([$id_article]);
             $article = $stmt->fetch();
              if (strtolower($role )=== strtolower('employe_stock')){
@@ -53,12 +53,13 @@ if (intval ($donner_demande['id_article']) !==intval($id_article)) {
             $new_qte = $article['quantite'] - $qte;
             $stmt = $pdo->prepare("UPDATE article SET quantite = ? WHERE id_article = ?");
             $stmt->execute([$new_qte, $id_article]);
-           $stmtHist = $pdo->prepare("
-                INSERT INTO historique_movement 
-                (id_article, type_mouvement, quantite, id_utilisateur, id_magasin_src, date_mouvement, commentaire) 
-                VALUES (?, 'sortie', ?, ?, ?, NOW(), ?)
-            ");
-          $res = $stmtHist->execute([$id_article, $qte, $id_user, $article['id_magasin'], 'Sortie validée']);
+           $ommentaire =   "Sortie du magasin: " . $article['nom_magasin'];
+        $stmtHist = $pdo->prepare("INSERT INTO historique_movement 
+        (id_article, type_mouvement, quantite, id_utilisateur, date_mouvement, commentaire) 
+        VALUES (?, 'sortie', ?, ?, NOW(), ?)");
+
+
+        $res = $stmtHist->execute([$id_article,  $qte,  $id_user,   $ommentaire  ]);
                     if (strtolower($role )=== strtolower('employe_stock')){
                       if ($res) {
                 $updateStatus = $pdo->prepare("UPDATE demande_contact SET statut = 'executed' WHERE id_demande = ?");
@@ -68,8 +69,8 @@ if (intval ($donner_demande['id_article']) !==intval($id_article)) {
             }}
 
             $pdo->commit();
-            $success_message = "Sortie de stock effectuée avec succès";
-            $articles = $pdo->query("SELECT id_article, nom_article, modele, quantite FROM article WHERE etat = 'actif'")->fetchAll();
+            $success_message = "Sortie de stock effectuée avec succes";
+         
 
         } catch (Exception $e) {
             $pdo->rollBack();
@@ -121,13 +122,12 @@ if (intval ($donner_demande['id_article']) !==intval($id_article)) {
             <input type="number" name="quantite" class="form-control" min="1" required placeholder="Entrez la quantité">
         </div>
 
-        <div class="row g-3 mt-4">
-            <div class="col-6">
+         <div class="d-flex gap-3">
+            
                 <button type="submit" name="sortie" class="btn btn-primary w-100">
                     Enregistrer
                 </button>
-            </div>
-            <div class="col-6">
+            
                    
   <?php if ($role == 'admin'): ?>
 
@@ -145,7 +145,8 @@ if (intval ($donner_demande['id_article']) !==intval($id_article)) {
 
         </a>
         <?php endif ?>
-            </div>
+        
+            
         </div>
     </form>
 </div>

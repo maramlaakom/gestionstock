@@ -50,14 +50,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label class="form-label">Nom de l'article <span class="required-star">*</span></label>
                 <input type="text" name="nom" class="form-control" 
                        value="<?= htmlspecialchars($article['nom_article']) ?>" 
-                       placeholder="Ex: Imprimante" required>
+                       placeholder="nom article" required>
             </div>
             
             <div class="mb-4">
                 <label class="form-label">Modèle</label>
                 <input type="text" name="modele" class="form-control" 
                        value="<?= htmlspecialchars($article['modele']) ?>" 
-                       placeholder="Ex: HP">
+                       placeholder="modele">
             </div>
             <div class="mb-4">
                 <label class="form-label">Magasin <span class="required-star">*</span></label>
@@ -80,16 +80,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                        placeholder="000" required>
             </div>
             
-            <div class="row g-3"> 
-                <div class="col-6">
-                    <button type="submit" class="btn btn-primary w-100"> Mettre a jour</button>
-                </div>
-                <div class="col-6">
-                    <a href="gestionarticle.php" class="btn btn-secondary w-100 ">
+              <div class="d-flex gap-3">
+                  <button type="submit" class="btn btn-primary w-100"> Mettre a jour</button>
+                    </button>
+                   <a href="gestionarticle.php" class="btn btn-secondary w-100 ">
                         Annuler
                     </a>
                 </div>
-            </div>
         </form>
     </div>
 

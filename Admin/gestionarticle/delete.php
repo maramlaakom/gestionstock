@@ -14,30 +14,33 @@ $id_user = $_SESSION['id_utilisateur'] ;
 $nom_user = $_SESSION['nom'] ;
 $prenom_user = $_SESSION['prenom'];
 
-$stmt = $pdo->prepare("SELECT quantite, id_magasin FROM article WHERE id_article = ? AND etat = 'actif'");
+$stmt = $pdo->prepare("SELECT quantite, id_magasin FROM article WHERE id_article = ? AND  quantite > 0 ");
 $stmt->execute([$id]);
 $art = $stmt->fetch();
 
 if ($art) {
     try {
         $pdo->beginTransaction();
-        $com= "Suppression definitive par  " . $nom_user ." " .$prenom_user;
+          $stmt_mag = $pdo->prepare("SELECT nom_magasin FROM magasin WHERE id_magasin = ?");
+            $stmt_mag->execute([$art["id_magasin"]]);
+            $mag = $stmt_mag->fetch();
+            $nom_magasin = $mag['nom_magasin'];
+        $sql_update = "UPDATE article SET  quantite = 0 WHERE id_article = ?";
+        $stmt_update = $pdo->prepare($sql_update);
+        $stmt_update->execute([$id]);
+        $com = "Article retire par " . $nom_user . "  " . $prenom_user . "  "." du magasin : "."  " . $nom_magasin;
         $sql_hist = "
             INSERT INTO historique_movement 
-            (id_article, type_mouvement, quantite, id_utilisateur, id_magasin_src, commentaire)
-            VALUES (?, 'sortie', ?, ?, ?, ?)
+            (id_article, type_mouvement, quantite, id_utilisateur, commentaire)
+            VALUES (?, 'sortie', ?,?, ?)
         ";
-        $stmt_hist = $pdo->prepare($sql_hist);
+        $stmt_hist = $pdo->prepare($sql_hist);6
         $stmt_hist->execute([
             $id,
             $art['quantite'],
             $id_user, 
-            $art['id_magasin'],
             $com
         ]);
-        $sql_update = "UPDATE article SET etat = 'supprime', quantite = 0 WHERE id_article = ?";
-        $stmt_update = $pdo->prepare($sql_update);
-        $stmt_update->execute([$id]);
 
         $pdo->commit();
 

@@ -4,7 +4,7 @@ require_once __DIR__ . '/../../includes/connexion.php';
 require_once '../../employe_stock/auth.php';
 require_role(["Admin"]);
       if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nom = $_POST['nom'];
+    $nom = ($_POST['nom']);
     $prenom = $_POST['prenom']; 
     $email = $_POST['email'];
     $role = $_POST['role'];
@@ -52,7 +52,7 @@ require_role(["Admin"]);
                     <input type="text" name="nom" class="form-control" placeholder="Nom" required>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Prénom <span class="required-star">*</span></label>
+                    <label class="form-label">Prenom <span class="required-star">*</span></label>
                     <input type="text" name="prenom" class="form-control" placeholder="Prénom" required>
                 </div>
             </div>
@@ -68,7 +68,7 @@ require_role(["Admin"]);
             </div>
 
             <div class="mb-4">
-                <label class="form-label">Rôle <span class="required-star">*</span></label>
+                <label class="form-label">Role <span class="required-star">*</span></label>
                 <select name="role" class="form-select">
                     
                     <option >choisir le role </option>
@@ -77,15 +77,12 @@ require_role(["Admin"]);
                 </select>
             </div>
 
-            <div class="row g-3">
-                <div class="col-6">
-                    <button type="submit" class="btn btn-primary w-100" style="height: 48px;">
-                        Enregistrer
+            
+                 <div class="d-flex gap-3">
+                  <button type="submit" class="btn btn-primary w-100">ajouter </button>
                     </button>
-                </div>
-                <div class="col-6">
-                    <a href="listeutilisateur.php" class="btn btn-secondary w-100 d-flex align-items-center justify-content-center" style="height: 48px; text-decoration: none;">
-                        Retour
+                  <a href="listeutilisateur.php" class="btn btn-secondary w-100 ">
+                        Annuler
                     </a>
                 </div>
             </div>

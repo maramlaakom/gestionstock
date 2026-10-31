@@ -7,23 +7,24 @@ require_role(["Admin","employe_stock"]);
     $role = $_SESSION['role'];
 if (strtolower($role )=== strtolower('employe_stock')){
 if (!isset($_GET['id'])) {
-    die("ID  manquant.");
+    die("ID demante manquant.");
 }
 $id_dem = intval($_GET['id']);
 }
     $id_user = $_SESSION['id_utilisateur'];
-$tousarticle = $pdo->query("SELECT a.id_article, a.nom_article, a.modele, a.quantite, a.id_magasin, m.nom_magasin FROM article a JOIN magasin m ON a.id_magasin = m.id_magasin WHERE a.etat = 'actif' AND a.quantite > 0")->fetchAll(PDO::FETCH_ASSOC);
+$tousarticle = $pdo->query("SELECT a.id_article, a.nom_article, a.modele, a.quantite, a.id_magasin, m.nom_magasin FROM article a JOIN magasin m ON a.id_magasin = m.id_magasin WHERE  a.quantite > 0")->fetchAll();
 $tousmagasin = $pdo->query("SELECT * FROM magasin")->fetchAll(PDO::FETCH_ASSOC);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_article = intval($_POST['id_article']);
     $id_magasin_dst = intval($_POST['magasin_dst']);
-    $qte_transfert = intval($_POST['quantite']);
+    $qte_transfert = $_POST['quantite'];
 
     try {
 
         $pdo->beginTransaction();
-        $stmtArt = $pdo->prepare("SELECT * FROM article WHERE id_article = ?");
+       $stmtArt = $pdo->prepare("SELECT a.*, m.nom_magasin as nom_magasin_src FROM article a JOIN magasin m ON a.id_magasin = m.id_magasin 
+       WHERE a.id_article = ?");
         $stmtArt->execute([$id_article]);
         $article = $stmtArt->fetch();
 
@@ -43,7 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           throw new Exception("Le magasin de destination   .($$id_magasin_dst).ne correspond pas à celui de la demande  (ID: " . $donner_demande['id_magasin_dest'] . ")");
         }
         if (intval($donner_demande['qte_demande']) !== $qte_transfert) {
-            throw new Exception("La quantité est différente de celle autorisée dans la demande.");
+            
+            throw new Exception("La quantite est differente de celle autorisee dans la demande.");
         }
         }
           if (!$article) {
@@ -73,19 +75,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->prepare("INSERT INTO article (nom_article, modele,  cout, quantite, id_magasin) VALUES (?, ?, ?, ?, ?)");
             $stmt->execute([$article['nom_article'], $article['modele'], $article['cout'], $qte_transfert, $id_magasin_dst]);
         }
-
-$stmtMvt = $pdo->prepare("INSERT INTO historique_movement (id_article, type_mouvement, quantite, id_utilisateur, id_magasin_src, id_magasin_dst, commentaire, date_mouvement) VALUES (?, 'transfert', ?, ?, ?, ?, ?, NOW())");
-$res = $stmtMvt->execute([$id_article, $qte_transfert, $id_user, $id_magasin_src, $id_magasin_dst, 'Transfert effectué']);
-if (strtolower($role )=== strtolower('employe_stock')){
-if ($res) {
-    $updateDemande = $pdo->prepare("UPDATE demande_contact SET statut = 'executed' WHERE id_demande = ?");
-    $updateDemande->execute([$id_dem]); 
-    
-    $success_message = "Transfert effectué avec succès et demande clôturée.";
-}
-}
+        $stmtDst = $pdo->prepare("SELECT nom_magasin FROM magasin WHERE id_magasin = ?");
+$stmtDst->execute([$id_magasin_dst]);
+$nom_magasin_dst = $stmtDst->fetch();
+        $commentaire = "Transfert effectué de " .  $article  ['nom_magasin_src']. " vers " . $nom_magasin_dst['nom_magasin'];
+        $stmtMvt = $pdo->prepare("INSERT INTO historique_movement (id_article, type_mouvement, quantite, id_utilisateur, commentaire, date_mouvement) VALUES (?, 'transfert', ?, ?, ?, NOW())");
+        $res = $stmtMvt->execute([$id_article, $qte_transfert, $id_user,$commentaire ]);
+        if (strtolower($role )=== strtolower('employe_stock')){
+        if ($res) {
+         $updateDemande = $pdo->prepare("UPDATE demande_contact SET statut = 'executed' WHERE id_demande = ?");
+        $updateDemande->execute([$id_dem]); 
+        $success_message = "Transfert effectue avec succes .";
+        }
+        }
         $pdo->commit();
-        $success_message = "Transfert effectué avec succès";
+        $success_message = "Transfert effectue avec succes";
     } catch (Exception $e) {
         $pdo->rollBack();
         $error_message = $e->getMessage();
@@ -147,16 +151,15 @@ if ($res) {
 
         <div class="mb-4">
             <label class="form-label">Quantité <span class="required-star">*</span></label>
-            <input type="number" name="quantite"step="1" class="form-control" required min="1" placeholder="Entrez la quantité">
+            <input type="number" name="quantite"step="1" class="form-control" required min="1" placeholder="Entrez la quantite">
         </div>
 
-        <div class="row g-3 mt-4">
-            <div class="col-6">
+         <div class="d-flex gap-3">
+        
                 <button type="submit" class="btn btn-primary w-100">
                     Transférer
                 </button>
-            </div>
-            <div class="col-6">
+           
              
   <?php if(isset($role) && $role == 'admin'): ?>
 
@@ -174,7 +177,7 @@ if ($res) {
 
         </a>
         <?php endif ?>
-            </div>
+           
         </div>
     </form>
 </div>

@@ -13,13 +13,13 @@ if ($search != "") {
                            FROM article a 
                             JOIN magasin m ON a.id_magasin = m.id_magasin 
                            WHERE (a.nom_article LIKE ? OR a.modele LIKE ? OR m.nom_magasin LIKE ?  ) 
-                           AND a.etat = 'actif'AND quantite >0");
+                            AND quantite >0");
     $stmt->execute(["%$search%", "%$search%", "%$search%"]);
 } else {
     $stmt = $pdo->query("SELECT a.*, m.nom_magasin 
                          FROM article a 
                          JOIN magasin m ON a.id_magasin = m.id_magasin 
-                         WHERE a.etat = 'actif'AND quantite >0");
+                         WHERE quantite >0");
 }
 $articles = $stmt->fetchAll(); 
 ?>
@@ -37,8 +37,8 @@ $articles = $stmt->fetchAll();
     <link rel="stylesheet" href="../../css/cards.css">
       <link rel="stylesheet" href="../../css/forms.css">
    <style>
-.bg1 { background-color: #7cbbff !important; color: black; }
-.bg2 { background-color: #ff6f59 !important; color: black }
+.bg1 { background-color: #7cbbff ; color: black; }
+.bg2 { background-color: #ff6f59 ; color: black }
 </style>
 </head>
 <body>
@@ -86,12 +86,12 @@ $articles = $stmt->fetchAll();
                         </div>
                         
                         <h5 class="fw-bold mb-1 text-primary"><?= htmlspecialchars($a['nom_article']) ?></h5>
-                     <?php?>
+                    
                         <div class="mb-4">
                             <label class="text-muted small d-block mb-1 fw-bold">Détails</label>
                             <div class="small text-dark">
-                                <i class="bi bi-tag me-1"></i> <strong>Modèle:</strong> <?= htmlspecialchars($a['modele']) ?><br>
-                                <i class="bi bi-shop me-1"></i> <strong>Magasin:</strong> <?= htmlspecialchars($a['nom_magasin'] /*?? 'Non assigné') */)?>
+                                <i class="bi bi-tag me-1"></i> <strong>Modele:</strong> <?= htmlspecialchars($a['modele']) ?><br>
+                                <i class="bi bi-shop me-1"></i> <strong>Magasin:</strong> <?= htmlspecialchars($a['nom_magasin'] )?>
                             </div>
                         </div>
                         <div class="mb-4">

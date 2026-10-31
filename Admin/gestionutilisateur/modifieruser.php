@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StockSys - Modifier Utilisateur</title>
+    <title> Modifier Utilisateur</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" class="form-control" required autocomplete="off">
             </div>
 
-             <div class="row g-3 ">
+             <div class="row g-3 mb-5 ">
                 <div class="col-6">
                     <label class="form-label">Rôle <span class="required-star">*</span></label>
                     <select name="role" class="form-select">
@@ -75,18 +75,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
 
-            <div class="row g-3 mt-4">
-                <div class="col-6">
-                    <button type="submit" class="btn btn-primary w-100" style="height: 48px;">
-                        Mettre a jour
+           <div class="d-flex gap-3">
+                  <button type="submit" class="btn btn-primary w-100">mettre a jour </button>
                     </button>
-                </div>
-                <div class="col-6">
-                    <a href="listeutilisateur.php" class="btn btn-secondary w-100 d-flex align-items-center justify-content-center" style="height: 48px; text-decoration: none;">
-                        Retour
+                  <a href="listeutilisateur.php" class="btn btn-secondary w-100 ">
+                        Annuler
                     </a>
                 </div>
-            </div>
         </form>
     </div>
 </body>

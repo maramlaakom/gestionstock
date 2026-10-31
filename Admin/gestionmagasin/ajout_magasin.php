@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare($sql);
         $stmt->execute([ $nom_magasin , $adresse ]);
 
-        $success = "Magasin ajouté avec succès !";
+        $success = "Magasin ajoute avec succès !";
     }
 }
 ?>
@@ -60,14 +60,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="text" name="adresse" class="form-control" placeholder="Entrez l'adresse" required>
             </div>
 
-            <div class="row g-3 mt-4">
-    <div class="col-6">
-        <button type="submit" class="btn btn-primary w-100">Ajouter</button>
-    </div>
-    <div class="col-6">
-        <a href="gestionmagasins.php" class="btn btn-secondary w-100">Retour</a>
-    </div>
-</div>
+        
+          <div class="d-flex gap-3">
+                  <button type="submit" class="btn btn-primary w-100">ajouter </button>
+                    </button>
+                  <a href="gestionmagasins.php" class="btn btn-secondary w-100 ">
+                        Annuler
+                    </a>
+                </div>
         </form>
     </div>
 

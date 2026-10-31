@@ -19,19 +19,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) { 
         try {
             $pdo->beginTransaction();
+            $stmt_mag = $pdo->prepare("SELECT nom_magasin FROM magasin WHERE id_magasin = ?");
+            $stmt_mag->execute([$id_magasin]);
+            $mag = $stmt_mag->fetch();
+            $nom_magasin = $mag['nom_magasin'];
             $sql = "INSERT INTO article 
                     (nom_article, modele, quantite, cout, id_magasin) 
                     VALUES (?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$nom_article, $modele, 1, $cout, $id_magasin]);
             $last_id = $pdo->lastInsertId();
+            $comme ="Nouvel article ajoute"." ". $nom_user ."  " .$prenom_user."   " ."au magasin"."   " . $nom_magasin ;
             $sql_hist = "INSERT INTO historique_movement 
-                         (id_article, type_mouvement, quantite, id_utilisateur, id_magasin_dst, commentaire)
-                         VALUES (?, 'entree', ?, ?, ?, ?)";
+                         (id_article, type_mouvement, quantite, id_utilisateur, commentaire)
+                         VALUES (?, 'entree', ?, ?, ?)";
             $stmt_hist = $pdo->prepare($sql_hist);
-            $stmt_hist->execute([$last_id, 1, $id_user, $id_magasin, "Nouvel article ajoute". $nom_user ." " .$prenom_user]);
+            $stmt_hist->execute([$last_id, 1, $id_user, $comme ]);
             $pdo->commit();
-            $success = "Article ajouté et mouvement enregistré avec succès !";
+            $success = "Article ajoute et mouvement enregistre avec succes !";
         } catch (Exception $e) {
             $pdo->rollBack();
             $errors[] = "Erreur lors de l'ajout : " . $e->getMessage();
@@ -68,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="mb-3">
                 <label class="form-label">Nom de l'article <span class="required-star">*</span></label>
                 <input type="text" name="nom_article" class="form-control" 
-                       placeholder="donner le nom Imprimante " required>
+                       placeholder="nom article " required>
             </div>           
             <div class="mb-3">
                 <label class="form-label">Modele <span class="required-star">*</span></label>
@@ -91,12 +96,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                    <label class="form-label">Prix unitaire (DT) <span class="required-star">*</span></label>
                     <input type="number" step="0.01" name="prix" class="form-control" min="0"    placeholder="000"  required>
                 </div>    
-            <div class="row g-3 mt-3">
-                <div class="col-6">
-                    <button type="submit" class="btn btn-primary w-100">Enregistrer</button>
-                </div>
-                <div class="col-6">
-                    <a href="gestionarticle.php" class="btn btn-secondary w-100 ">Annuler</a>
+        
+                   <div class="d-flex gap-3">
+                  <button type="submit" class="btn btn-primary w-100">ajouter</button>
+                    </button>
+                   <a href="gestionarticle.php" class="btn btn-secondary w-100 text-center text-decoration-none">
+                        Annuler
+                    </a>
                 </div>
             </div>
             </div>

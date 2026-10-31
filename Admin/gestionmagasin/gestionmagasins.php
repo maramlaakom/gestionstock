@@ -11,7 +11,7 @@ if (isset($_GET['search'])) {
 $CAPACITE_DEFAUT = 2000; 
     if ($search != "") {
         $sql = "SELECT m.*, COUNT(a.id_article) AS nb_types, IFNULL(SUM(a.quantite), 0) AS total_qte FROM magasin m
-        LEFT JOIN article a ON m.id_magasin = a.id_magasin AND a.etat = 'actif' AND a.quantite > 0
+        LEFT JOIN article a ON m.id_magasin = a.id_magasin  AND a.quantite > 0
         WHERE m.nom_magasin LIKE ? 
         GROUP BY m.id_magasin";
         $stmt = $pdo->prepare($sql);
@@ -19,16 +19,17 @@ $CAPACITE_DEFAUT = 2000;
     } else {
         $sql = "SELECT m.*, COUNT(a.id_article) AS nb_types, IFNULL(SUM(a.quantite), 0) AS total_qte
                 FROM magasin m
-                LEFT JOIN article a ON m.id_magasin = a.id_magasin AND a.etat = 'actif'AND a.quantite > 0
+                LEFT JOIN article a ON m.id_magasin = a.id_magasin AND a.quantite > 0
                 GROUP BY m.id_magasin";
         $stmt = $pdo->query($sql);
     }
     $magasins = $stmt->fetchAll();
-    foreach ($magasins as &$m) {
-        $stmt_art = $pdo->prepare("SELECT nom_article, quantite FROM article WHERE id_magasin = ? AND etat = 'actif' AND quantite >0 ");
+    $mag=[];
+    foreach ($magasins as $m) {
+        $stmt_art = $pdo->prepare("SELECT nom_article, quantite FROM article WHERE id_magasin = ?  AND quantite >0 ");
         $stmt_art->execute([$m['id_magasin']]);
         $m['list_articles'] = $stmt_art->fetchAll();
-        unset($m);
+        $mag [] = $m;
     }
     
 
@@ -74,16 +75,16 @@ $CAPACITE_DEFAUT = 2000;
 
 
     <div class="row g-4">
-        <?php if(empty($magasins)): ?>
+        <?php if(empty($mag)): ?>
             <div class="col-12">
                 <div class="no-results shadow-sm">
                     <i class="bi bi-building-exclamation" style="font-size: 4rem; color: var(--secondary);"></i>
-                    <h4 class="mt-3 fw-bold " style="color: var(--primary);">Aucun magasin trouvé</h4>
-                    <p class="text-muted">Essayez un autre mot-clé ou créez un nouveau magasin.</p>
+                    <h4 class="mt-3 fw-bold " style="color: var(--primary);">Aucun magasin trouve</h4>
+                    <p class="text-muted">Essayez un autre mot-clé ou créer un nouveau magasin.</p>
                 </div>
             </div>
         <?php else: ?>
-            <?php foreach($magasins as $m): 
+            <?php foreach($mag as $m): 
                 $usage_percent = ($m['total_qte'] / $CAPACITE_DEFAUT) * 100;
                if ($usage_percent > 85) {
                $bar_color = 'bg-danger';
@@ -108,7 +109,7 @@ $CAPACITE_DEFAUT = 2000;
                                 <span class="fw-bold small text-dark"><?=($m['total_qte']) ?> / <?= $CAPACITE_DEFAUT ?></span>
                             </div>
                             <div class="progress" style="height: 10px; background-color: #f0f2f5; border-radius: 10px;">
-                                <div class="progress-bar <?= $bar_color ?> rounded-pill" style="width: <?= min($usage_percent, 100) ?>%"><??> </div>
+                                <div class="progress-bar <?= $bar_color ?> rounded-pill" style="width: <?= min($usage_percent, 100) ?>%"> </div>
                             </div>
                         </div>
 
@@ -175,6 +176,5 @@ $CAPACITE_DEFAUT = 2000;
 
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

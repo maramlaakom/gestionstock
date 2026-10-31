@@ -8,16 +8,22 @@ $nom_user = $_SESSION['nom'] ;
 $prenom_user = $_SESSION['prenom'];
 
 try {
-    $total_art = $pdo->query("SELECT SUM(quantite) FROM article WHERE etat = 'actif'")->fetchColumn() ?: 0;
-    $unread_notif = $pdo->query("SELECT COUNT(*) FROM notification WHERE id_utilisateur = $id_user AND etat = 'non_lu'")->fetchColumn() ?: 0;
-        $total_mvt = $pdo->query("SELECT COUNT(*) FROM historique_movement WHERE id_utilisateur = $id_user AND  MONTH(date_mouvement) = MONTH(CURRENT_DATE()) AND YEAR(date_mouvement) = YEAR(CURRENT_DATE())")->fetchColumn() ?: 0;
-         $total_mag = $pdo->query("SELECT COUNT(*) FROM magasin")->fetchColumn() ?: 0;
-    $total_demandes = $pdo->query("SELECT COUNT(*) FROM demande_contact WHERE id_utilisateur = $id_user")->fetchColumn() ?: 0;
+     $stmt_total_art = $pdo->query("SELECT id_article  FROM article WHERE quantite > 0 ");
+    $total_art = $stmt_total_art->rowcount();
+       $stmt_n = $pdo->query("SELECT n.id_notification FROM notification n
+        JOIN notification_utilisateur nu ON n.id_notification = nu.id_notification WHERE nu.id_utilisateur = $id_user AND n.etat = 'non_lu'");
+    $unread_notif = $stmt_n->rowCount();
+     $stmt_total_mvt = $pdo->query("SELECT id_historique FROM historique_movement WHERE  id_utilisateur = $id_user AND  MONTH(date_mouvement) = MONTH(CURRENT_DATE()) AND YEAR(date_mouvement) = YEAR(CURRENT_DATE())");
+    $total_mvt= $stmt_total_mvt->rowcount();
+            $stmt_total_mag= $pdo->query("SELECT id_magasin  FROM magasin");
+    $total_mag = $stmt_total_mag->rowcount();
+
+    $stmt_total_demandes = $pdo->query("SELECT id_demande  FROM demande_contact WHERE id_utilisateur = $id_user") ;
+    $total_demandes = $stmt_total_demandes->rowcount();
     $stmt = $pdo->prepare("SELECT h.*, a.nom_article FROM historique_movement h JOIN article a ON h.id_article = a.id_article WHERE h.id_utilisateur = ? ORDER BY h.date_mouvement DESC LIMIT 20");
     $stmt->execute([$id_user]);
-    
-    $movements = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) 
+    $movements = $stmt->fetchAll();
+} catch (Exception $e) 
 { die("Erreur : " . $e->getMessage()); }
 
 
@@ -90,8 +96,8 @@ try {
             <i class="bi bi-person-fill"></i>
         </div>
         <div>
-            <h6 class="mb-0 fw-bold" style="color: #1b254b;"><?= htmlspecialchars($nom_user) , htmlspecialchars($prenom_user) ?></h6>
-            <small class="text-muted">Employé</small>
+            <h6 class="mb-0 fw-bold" style="color: #1b254b;"><?= htmlspecialchars($nom_user) . "  ". htmlspecialchars($prenom_user) ?></h6>
+            <small class="text-muted">Employe</small>
         </div>
     </div>
 
@@ -115,7 +121,7 @@ try {
 </header>
         <div class="stat-grid">
             <div class="stat-card">
-                <h6 class="text-muted small text-uppercase">Articles en Stock</h6>
+                <h6 class="text-muted small text-uppercase"> nb article</h6>
                 <h3 class="fw-bold "><?=$total_art ?></h3>
 
             </div>
@@ -136,9 +142,9 @@ try {
 
         <div class="content-section">
              <div class=" text-primary">
-          <h5>    <i class="bi bi-clock-history"></i> Mouvements Récents </h5>
+          <h5>    <i class="bi bi-clock-history"></i> Mouvements Recents </h5>
         </div>
-            <div class="table-responsive">
+            <div >
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>

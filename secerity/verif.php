@@ -54,8 +54,8 @@ if (isset($_POST['valider'])) {
 <body class="page-form"> 
     <div class="form-container">
          <div class="text-center mb-4">
-            <h2>Vérification</h2> 
-            <p style="color: var(--text-muted);">Entrez le code à 6 chiffres que vous avez reçu.</p>
+            <h2>Verification</h2> 
+            <p style="color: var(--text-muted);">Entrez le code a 6 chiffres que vous avez reçu.</p>
         </div>
 
         <?php if ($error): ?>
@@ -66,7 +66,7 @@ if (isset($_POST['valider'])) {
             <div class="mb-4">
                 <input type="text" name="code" class="form-control text-center fw-bold" 
                        style="letter-spacing: 5px; font-size: 1.5rem;"
-                       placeholder="000000" maxlength="6" required autocomplete="off">
+                       placeholder="000000" maxlength="6" required >
             </div>
             
             <button type="submit" name="valider" class="btn-primary w-100">

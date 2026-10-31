@@ -12,13 +12,12 @@ if (isset($_POST['submit'])) {
     try {
         $sql = "SELECT id_utilisateur, role,nom,email ,prenom,mot_de_passe 
                 FROM utilisateur 
-                WHERE email = :useremail"; 
+                WHERE email = ?"; 
 
         $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':useremail', $email);
-        $stmt->execute();
+        $stmt->execute([ $email]);
 
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $user = $stmt->fetch();
 
         if ($user) {
           
@@ -45,7 +44,7 @@ if (isset($_POST['submit'])) {
         } else {
             $error = "Utilisateur non trouve.";
         }
-    } catch (PDOException $e) {
+    } catch (Exception $e) {
         $error = "Erreur SQL : " . $e->getMessage();
     }
 }
@@ -85,7 +84,7 @@ if (isset($_POST['submit'])) {
     <h2>Connexion a votre compte</h2>
 
     <?php if (!empty($error)) { ?>
-        <div class="error-msg"><?= htmlspecialchars($error) ?></div>
+         <div class="alert alert-danger text-center"><?= htmlspecialchars($error) ?></div>
     <?php } ?>
 
     <form method="POST">

@@ -3,7 +3,7 @@ require_once '../includes/connexion.php';
 
 $errors = [];
 $success = '';
-
+//
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $nom        = trim($_POST['nom']);
@@ -18,8 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = "Email invalide.";
     }
 
-    if (strlen($motdepasse) < 0) {
-        $errors[] = "Le mot de passe doit contenir au moins 8 caracteres.";
+    if (strlen($motdepasse) < 2) {
+        $errors[] = "Le mot de passe doit contenir au moins 2 caracteres.";
     }
 
     if (empty($errors)) {
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $success = "Utilisateur enregistre avec succes !";
 
-        } catch (PDOException $e) {
+        } catch (Exception $e) {
 
             if ($e->getCode() == 23000) {
                 $errors[] = "Cet email existe deja.";
@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Prénom :</label>
+            <label class="form-label">Prenom :</label>
             <input type="text" name="prenom" class="form-control" placeholder="Votre prénom" required>
         </div>
 

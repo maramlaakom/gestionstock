@@ -1,3 +1,4 @@
+///
 <?php
 require_once '../includes/connexion.php';
 require_once "auth.php";
@@ -24,19 +25,19 @@ $dem = $stmt_hist->fetchAll();
     <div style=" padding: 30px;">
         
         <h2 class="text-center">
-            <i class="bi bi-card-checklist me-2"></i>État de vos demandes
+            <i class="bi bi-card-checklist me-2"></i>Etat de vos demandes
         </h2>
         <a href="?" 
            class="bouton text-right">
               <i class="bi bi-arrow-clockwise"></i>
         </a>
-            <div class="table-responsive">
+            <div >
                 <table class="table align-middle ">
                     <thead>
                         <tr>
-                            <th>Détails de l'opération</th>
+                            <th>Details de l'operation</th>
                             <th>Statut</th>
-                            <th c>Action</th>
+                            <th >Action</th>
                         </tr>
                     </thead>
                 <tbody>
@@ -45,7 +46,7 @@ $dem = $stmt_hist->fetchAll();
             <td colspan="3" class="text-center py-5">
                 <div class="no-results">
                     <i class="bi bi-inbox d-block mb-2"style="font-size: 2rem;" ></i>
-                    <p> Aucune demande trouvée.</p>
+                    <p> Aucune demande trouvee.</p>
                 </div>
             </td>
         </tr>
@@ -65,11 +66,11 @@ $dem = $stmt_hist->fetchAll();
                 <?php if($h['statut'] === 'en_attente'): ?>
                     <span class="badge rounded-pill stock-high px-3 py-2" style="background: #a1edf2; color: #000;">En attente</span>
                 <?php elseif($h['statut'] === 'approuvee'): ?>
-                    <span class="badge rounded-pill" style="background: #85f197; color: #000;">Approuvée</span>
+                    <span class="badge rounded-pill" style="background: #85f197; color: #000;">accept</span>
                 <?php elseif($h['statut'] === 'executed'): ?>
-                    <span class="badge rounded-pill" style="background: #d1d1d1; color: #555;">Terminé</span>
+                    <span class="badge rounded-pill" style="background: #d1d1d1; color: #555;">Termine</span>
                 <?php else: ?>
-                    <span class="badge rounded-pill  px-3 py-1" style="background: #ffb0b0; color: #000;">Refusée</span>
+                    <span class="badge rounded-pill  px-3 py-1" style="background: #ffb0b0; color: #000;">Refusee</span>
                 <?php endif; ?>
             </td>
          <td class="text-center">

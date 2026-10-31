@@ -1,3 +1,4 @@
+///
 <?php
 
 require_once '../includes/connexion.php';
@@ -8,14 +9,10 @@ SELECT
     h.*,
     a.nom_article,
     u.prenom AS user_prenom,
-    u.nom AS user_nom,
-    m_src.nom_magasin AS magasin_source,
-    m_dst.nom_magasin AS magasin_destination
+    u.nom AS user_nom
 FROM historique_movement h
 LEFT JOIN article a ON h.id_article = a.id_article
 LEFT JOIN utilisateur u ON h.id_utilisateur = u.id_utilisateur
-LEFT JOIN magasin m_src ON h.id_magasin_src = m_src.id_magasin
-LEFT JOIN magasin m_dst ON h.id_magasin_dst = m_dst.id_magasin
 ORDER BY h.date_mouvement DESC
 ";
 
@@ -73,7 +70,7 @@ $mouvements = $stmt->fetchAll();
 
         <?php
             $icon  = "bi-plus-lg";
-            $label = "ENTRÉE";
+            $label = "ENTREE";
             $color = "bg-msg";
 
             if ($mvt['type_mouvement'] === 'sortie') {
@@ -99,41 +96,21 @@ $mouvements = $stmt->fetchAll();
                 <div class="col-md-3">
                     <div class="text-label"><?= $label ?></div>
                     <div class="text-value">
-                        <?= htmlspecialchars($mvt['nom_article']) ?>
+                        <?=   htmlspecialchars($mvt['nom_article'])    ?>
                     </div>
                 </div>
 
-                <div class="col-md-3">
-                    <div class="text-label">EMPLACEMENT</div>
-                    <div class="text-value small" style="color: #64748b;">
-                      <?php
-         
-$emplacement = '';
-
-if ($mvt['type_mouvement'] === 'transfert') {
-    $emplacement = $mvt['magasin_source'] . ' -> ' . $mvt['magasin_destination'];
-} elseif ($mvt['type_mouvement'] === 'entree') {
- 
-    $emplacement = $mvt['magasin_destination'];
-} else { 
-  
-    $emplacement = $mvt['magasin_source'];
-}
-
-?>
-
-<i class="bi bi-geo-alt me-1"></i> <?= htmlspecialchars($emplacement) ?>
-
-</div>
-                </div>
+        
+            
 
                 <div class="col-md-3">
                     <div class="text-label">user & DATE</div>
                     <div class="text-value small" style="color: #64748b;">
                         <i class="bi bi-person me-1"></i>
-                        <strong><?= htmlspecialchars($mvt['user_nom']) ?></strong><br>
+                        <strong><?=  htmlspecialchars($mvt['user_prenom']) ."  " . htmlspecialchars($mvt['user_nom']) ?></strong><br>
 
                         <span class="text-muted fw-normal" style="font-size: 0.75rem;">
+
                             <?= date('d/m/Y H:i', strtotime($mvt['date_mouvement'])) ?>
                         </span>
                     </div>

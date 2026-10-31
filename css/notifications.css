@@ -93,11 +93,6 @@
     color: var(--danger);
 }
 
-.bg-msg {
-    background: #f0fdf4;
-    color: var(--success);
-}
-
 .bg-info {
     background: var(--secondary)!important;
     color: var( --bg);

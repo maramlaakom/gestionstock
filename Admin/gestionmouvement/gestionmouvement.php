@@ -1,3 +1,4 @@
+//
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/base.css">
     
 <style>
 .dashboard-mouvement {
@@ -23,10 +25,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px 20px !important;
-    background: white !important;
-    border: 2px solid var(--secondary) !important; 
-    border-radius: 15px !important;
+    padding: 40px 20px;
+    background: white ;
+    border: 2px solid var(--secondary) ; 
+    border-radius: 15px ;
     transition: transform 0.3s ease;
 }
 .mvt-card-custom:hover {
@@ -59,15 +61,8 @@
     font-size: 14px;
     margin: 0;
 }
-@media (max-width: 768px) {
-    .dashboard-mouvement {
-        flex-direction: column;
-        align-items: center;
-    }
-    .mvt-card-custom {
-        width: 100%;
-    }
-}
+
+
 </style>
 </head>
 <body>
@@ -76,8 +71,8 @@ require_once '../../includes/connexion.php';
 require_once '../../employe_stock/auth.php';
 require_role(["Admin"]);
 ?>
-  <a href="?">reflechi</a> 
-<link rel="stylesheet" href="../../css/base.css">
+
+
 <div class="dashboard-mouvement">
     <a href="entrestock.php" class=" mvt-card-custom">
         <div class="icon-circle bg-entree"> <i class="bi bi-plus-lg"> </i></div>
